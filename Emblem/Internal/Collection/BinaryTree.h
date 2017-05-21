@@ -34,12 +34,12 @@ namespace Collection
 {
 
 ///////////////////////////////////////////////////////////////////////
-
+template <class NodeType>
 class Node
 {
 public:
-    Node* mpLeftNode;
-    Node* mpRightNode;
+    NodeType* mpLeftNode;
+    NodeType* mpRightNode;
 
     Node()
         : mpLeftNode(nullptr), mpRightNode(nullptr) {}

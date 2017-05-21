@@ -26,9 +26,7 @@ using namespace std;
 #include <vector>
 #include <iostream>
 
-//#include "Emblem/Expression.h"
-
-#include "Emblem\Internal\Collection\BinaryTree.h"
+#include "Emblem/Expression.h"
 
 //using namespace Emblem;
 //
@@ -45,24 +43,16 @@ using namespace std;
 
 int main()
 {
-    Emblem::Collection::BinaryTree<double> tree;
-    /*tree.insertToHead(1.0);
-    tree.insertToHead(2.0);
-    tree.insertToHead(3.0);
-    tree.insertToHead(4.0);*/
-
-    Emblem::Collection::BinaryTree<double> tree2;
-    /*tree2.insertToHead(1.0);
-    tree2.insert<Emblem::Collection::InsertDirection::LEFT>(tree2.head(), tree);*/
-
     //Emblem::Expression<double>::ValueMap values;
 //   values["x"] = 4.0;
 //   values["y"] = 3.0;
     //values["z"] = 2.0;
 
-    //Emblem::Symbol<double> x("x"), y("y"), z("z");
+    Emblem::Symbol<double> x("x"), y("y"), z("z");
+    Emblem::Expression<double> expr0 = x;
+    Emblem::Expression<double> expr0 = expr0 + y;
     //Emblem::Expression<double> expr = sin(((x * y) + (z - x) / 5) + z);
-    ////Emblem::Expression<double> expr = (x * y) - (z + x);
+    //Emblem::Expression<double> expr = (x * y) - (z + x);
     //std::cout << expr << '\n';
 
     //const double result = expr.evaluate(values);

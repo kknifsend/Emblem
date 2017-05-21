@@ -22,7 +22,7 @@
 
 #include "Emblem\Symbol.h"
 #include "Math\BinaryOperators.h"
-#include "Math\UnaryOperator.h"
+#include "Math\UnaryOperators.h"
 
 #include <allocators>
 #include <string>
@@ -32,7 +32,7 @@ namespace Emblem
 {
 
 template <class T, class Allocator>
-class TermNode : public Collection::Node
+class TermNode : public Collection::Node<TermNode<T, Allocator>>
 {
 public:
     typedef std::unordered_map<

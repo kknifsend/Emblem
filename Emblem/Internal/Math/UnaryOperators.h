@@ -39,6 +39,11 @@ public:
         return mOperator(rValue);
     }
 
+    static UnaryOperator Sin;
+    static UnaryOperator Cos;
+    static UnaryOperator Tan;
+    static UnaryOperator Identity;
+
 private:
     Operator mOperator;
     std::string mOpenString;
@@ -57,3 +62,15 @@ T Tan(const T& rA) { return tan(rA); }
 
 template <class T>
 T Identity(const T& rA) { return rA; }
+
+template <class T>
+UnaryOperator<T> UnaryOperator<T>::Sin(Sin<T>, "sin(", ")");
+
+template <class T>
+UnaryOperator<T> UnaryOperator<T>::Cos(Cos<T>, "cos(", ")");
+
+template <class T>
+UnaryOperator<T> UnaryOperator<T>::Tan(Tan<T>, "tan(", ")");
+
+template <class T>
+UnaryOperator<T> UnaryOperator<T>::Identity(Identity<T>, "", "");

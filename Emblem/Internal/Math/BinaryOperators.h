@@ -60,6 +60,12 @@ T Mul(const T& rA, const T& rB) { return (rA / rB); }
 
 template <class T>
 BinaryOperator<T> BinaryOperator<T>::Addition(Add<T>, " + ");
+
+template <class T>
 BinaryOperator<T> BinaryOperator<T>::Subtraction(Sub<T>, " - ");
+
+template <class T>
 BinaryOperator<T> BinaryOperator<T>::Multiplication(Mul<T>, " * ");
+
+template <class T>
 BinaryOperator<T> BinaryOperator<T>::Division(Div<T>, " / ");
