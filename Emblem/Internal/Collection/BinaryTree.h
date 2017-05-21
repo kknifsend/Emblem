@@ -52,6 +52,21 @@ public:
                && (mpRightNode == nullptr);
     }
 
+    NodeType* cloneTree()
+    {
+        NodeType* pClone = clone();
+        if (mpLeftNode != nullptr)
+        {
+            pClone->mpLeftNode = mpLeftNode->clone();
+        }
+
+        if (mpRightNode != nullptr)
+        {
+            pClone->mpRightNode = mpRightNode->clone();
+        }
+
+        return pClone;
+    }
 };
 
 /**
@@ -77,8 +92,9 @@ public:
     /**
     * \brief Inserts and takes ownership of node.
     */
-    const NodeType* insertChildLeft(const NodeType* pParentNode, const NodeType* pChildNode);
-    const NodeType* insertChildRight(const NodeType* pParentNode, const NodeType* pChildNode);
+    const NodeType* insertChildLeft(NodeType* pParentNode, NodeType* pChildNode);
+    const NodeType* insertChildRight(NodeType* pParentNode, NodeType* pChildNode);
+    const NodeType* insertToHead(NodeType* pNode);
 
     void clear();
 
@@ -102,7 +118,6 @@ public:
     BinaryTree clone() const;
 
 private:
-    const NodeType* insertToHead(const NodeType* pNode);
 
     NodeType* mpHead;
 };
@@ -118,33 +133,51 @@ BinaryTree<NodeType>::BinaryTree()
 ///////////////////////////////////////////////////////////////////////
 
 template <class NodeType>
-BinaryTree<NodeType>::BinaryTree(const BinaryTree&)
+BinaryTree<NodeType>::BinaryTree(const BinaryTree& rOther)
+    : mpHead(nullptr)
 {
-
+    if (rOther.mpHead != nullptr)
+    {
+        mpHead = rOther.mpHead->clone();
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////
 
 template <class NodeType>
-BinaryTree<NodeType>::BinaryTree(BinaryTree&&)
+BinaryTree<NodeType>::BinaryTree(BinaryTree&& rOther)
+    : mpHead(nullptr)
 {
-
+    clear();
+    mpHead = rOther.mpHead;
+    rOther.mpHead = nullptr;
 }
 
 ///////////////////////////////////////////////////////////////////////
 
 template <class NodeType>
-BinaryTree<NodeType>& BinaryTree<NodeType>::operator=(const BinaryTree&)
+BinaryTree<NodeType>& BinaryTree<NodeType>::operator=(const BinaryTree& rOther)
 {
-
+    if (this != &rOther)
+    {
+        clear();
+        if (rOther.mpHead != nullptr)
+        {
+            mpHead = rOther.mpHead->clone();
+        }
+    }
+    return *this;
 }
 
 ///////////////////////////////////////////////////////////////////////
 
 template <class NodeType>
-BinaryTree<NodeType>& BinaryTree<NodeType>::operator=(BinaryTree&&)
+BinaryTree<NodeType>& BinaryTree<NodeType>::operator=(BinaryTree&& rOther)
 {
+    mpHead = rOther.mpHead;
+    rOther.mpHead = nullptr;
 
+    return *this;
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -197,12 +230,25 @@ void BinaryTree<NodeType>::clear()
 ///////////////////////////////////////////////////////////////////////
 
 template <class NodeType>
+BinaryTree<NodeType> BinaryTree<NodeType>::clone() const
+{
+    BinaryTree tree;
+    if (mpHead != nullptr)
+    {
+        tree.mpHead = mpHead->clone();
+    }
+    return tree;
+}
+
+///////////////////////////////////////////////////////////////////////
+
+template <class NodeType>
 const NodeType* BinaryTree<NodeType>::insertChildLeft(
-    const NodeType* pParentNode, const NodeType* pChildNode)
+    NodeType* pParentNode, NodeType* pChildNode)
 {
     if ((mpHead == nullptr) || (pParentNode == nullptr))
     {
-        return insertToHead(pNewNode);
+        return insertToHead(pChildNode);
     }
 
     if (pParentNode->mpLeftNode != nullptr)
@@ -218,11 +264,11 @@ const NodeType* BinaryTree<NodeType>::insertChildLeft(
 
 template <class NodeType>
 const NodeType* BinaryTree<NodeType>::insertChildRight(
-    const NodeType* pParentNode, const NodeType* pChildNode)
+    NodeType* pParentNode, NodeType* pChildNode)
 {
     if ((mpHead == nullptr) || (pParentNode == nullptr))
     {
-        return insertToHead(pNewNode);
+        return insertToHead(pChildNode);
     }
 
     if (pParentNode->mpRightNode != nullptr)
@@ -237,7 +283,7 @@ const NodeType* BinaryTree<NodeType>::insertChildRight(
 ///////////////////////////////////////////////////////////////////////
 
 template <class NodeType>
-const NodeType* BinaryTree<NodeType>::insertToHead(const NodeType* pNode)
+const NodeType* BinaryTree<NodeType>::insertToHead(NodeType* pNode)
 {
     clear();
     mpHead = pNode;

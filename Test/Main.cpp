@@ -43,10 +43,10 @@ using namespace std;
 
 int main()
 {
-    //Emblem::Expression<double>::ValueMap values;
-//   values["x"] = 4.0;
-//   values["y"] = 3.0;
-    //values["z"] = 2.0;
+    Emblem::Expression<double>::ValueMap values;
+    values["x"] = 4.0;
+    values["y"] = 3.0;
+    values["z"] = 2.0;
 
     Emblem::Symbol<double> x("x"), y("y"), z("z");
     Emblem::Expression<double> expr0 = x;
@@ -55,9 +55,9 @@ int main()
     //Emblem::Expression<double> expr = (x * y) - (z + x);
     //std::cout << expr << '\n';
 
-    //const double result = expr.evaluate(values);
+    const double result = expr1.evaluate(values);
     //const double trueResult = eval(values);
-    //std::cout << "Result = " << result << ", True Result = " << trueResult << '\n';
+    std::cout << "Result = " << result << '\n';
 
     std::cout << "\nProgram finished..\n";
     cin.get();

@@ -23,13 +23,13 @@
 template <class T>
 class UnaryOperator
 {
-public:
     typedef T(Operator)(const T&);
+public:
     UnaryOperator(
-        const Operator& rOperator,
+        Operator op,
         const std::string& rOpenString,
         const std::string& rCloseString)
-        : mOperator(rOperator), mOpenString(rOpenString),
+        : mOperator(op), mOpenString(rOpenString),
           mCloseString(rCloseString)
     {
     }

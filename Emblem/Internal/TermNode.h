@@ -40,7 +40,9 @@ public:
     std::string, T, std::hash<std::string>,
         std::equal_to<std::string>, Allocator> ValueMap;
 
-    virtual T evaluate(const ValueMap& rValueMap);
+    virtual T evaluate(const ValueMap& rValueMap) const = 0;
+
+    virtual TermNode* clone() = 0;
 
     virtual bool isOperand() const { return false; }
     virtual bool isOperator() const { return false; }
@@ -54,7 +56,7 @@ public:
     BinaryOperatorNode(const BinaryOperator<T>& rBinaryOperator)
         : mBinaryOperator(rBinaryOperator) {}
 
-    T evaluate(const ValueMap& rValueMap) override
+    T evaluate(const ValueMap& rValueMap) const override
     {
         assert(mpLeftNode != nullptr);
         assert(mpRightNode != nullptr);
@@ -63,6 +65,11 @@ public:
         const T rightVal = ((TermNode*)mpRightNode)->evaluate(rValueMap);
 
         return mBinaryOperator(leftVal, rightVal);
+    }
+
+    virtual TermNode* clone() override
+    {
+        return new BinaryOperatorNode(*this);
     }
 
     virtual bool isOperator() const { return true; }
@@ -77,7 +84,7 @@ public:
     UnaryOperatorNode(const UnaryOperator<T>& rUnaryOperator)
         : mUnaryOperator(rUnaryOperator) {}
 
-    T evaluate(const ValueMap& rValueMap) override
+    T evaluate(const ValueMap& rValueMap) const override
     {
         if (mpLeftNode != nullptr)
         {
@@ -87,6 +94,11 @@ public:
 
         const T val = ((TermNode*)mpRightNode)->evaluate(rValueMap);
         return mUnaryOperator(val);
+    }
+
+    virtual TermNode* clone() override
+    {
+        return new UnaryOperatorNode(*this);
     }
 
     virtual bool isOperator() const { return true; }
@@ -103,9 +115,14 @@ public:
         : mSymbol(rSymbol)
     {}
 
-    T evaluate(const ValueMap& rValueMap) override
+    T evaluate(const ValueMap& rValueMap) const override
     {
         return rValueMap.at(mSymbol.toString());
+    }
+
+    virtual TermNode* clone() override
+    {
+        return new SymbolNode(*this);
     }
 
     virtual bool isOperand() const { return true; }
@@ -123,9 +140,14 @@ public:
     {
     }
 
-    T evaluate(const ValueMap& rValueMap) override
+    T evaluate(const ValueMap& rValueMap) const override
     {
         return *mpData;
+    }
+
+    virtual TermNode* clone() override
+    {
+        return new ConstantNode(*this);
     }
 
     ~ConstantNode()

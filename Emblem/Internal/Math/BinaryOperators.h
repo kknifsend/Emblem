@@ -22,12 +22,12 @@
 template <class T>
 class BinaryOperator
 {
-public:
     typedef T(*Operator)(const T&, const T&);
+public:
     BinaryOperator(
-        const Operator& rOperator,
+        Operator op,
         const std::string& rString)
-        : mOperator(rOperator), mString(rString)
+        : mOperator(op), mString(rString)
     {
     }
 

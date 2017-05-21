@@ -254,7 +254,7 @@ private:
 template <class T, class ALLOC>
 Expression<T, ALLOC>::Expression(const Symbol<T>& rSymbol)
 {
-    mExpressionTree.insertChildLeft(new SymbolNode<T, ALLOC>(rSymbol));
+    mExpressionTree.insertToHead(new SymbolNode<T, ALLOC>(rSymbol));
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -262,7 +262,7 @@ Expression<T, ALLOC>::Expression(const Symbol<T>& rSymbol)
 template <class T, class ALLOC>
 Expression<T, ALLOC>::Expression(const T& rConstant)
 {
-    mExpressionTree.insertChildLeft(new ConstantNode<T, ALLOC>(rConstant));
+    mExpressionTree.insertToHead(new ConstantNode<T, ALLOC>(rConstant));
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -270,7 +270,7 @@ Expression<T, ALLOC>::Expression(const T& rConstant)
 template <class T, class ALLOC>
 T Expression<T, ALLOC>::evaluate(const ValueMap& rValues) const
 {
-    const TermNode<T, ALLOC>* pNode = mExpressionTree.head();
+    const TermNode* pNode = mExpressionTree.head();
     assert(pNode != nullptr);
     return pNode->evaluate(rValues);
 }
