@@ -2,17 +2,21 @@ cmake_minimum_required (VERSION 3.3.2)
 
 set(PUBLIC_HEADERS
 	Expression.h
+    Symbol.h
 )
 
 set(INTERNAL_HEADERS
 	Internal/ExpressionTree.h
 	Internal/ExpressionData.h
 	Internal/Types.h
+    Internal/TermNode.h
 )
 
 set(MATH_HEADERS
 	Internal/Math/ExpressionBase.h
 	Internal/Math/ArithmeticExpressions.h
+    Internal/Math/UnaryOperators.h
+    Internal/Math/BinaryOperators.h
 )
 
 set(COLLECTION_HEADERS
