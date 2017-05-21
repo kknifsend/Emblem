@@ -71,13 +71,14 @@ template <class T, class ALLOC = std::allocator<T>>
 class Expression
 {
     typedef TermNode<T, ALLOC> TermNode;
-    typedef BinaryOperationNode<T, ALLOC> BinaryOperationNode;
-    typedef UnaryOperationNode<T, ALLOC> UnaryOperationNode;
+    typedef BinaryOperatorNode<T, ALLOC> BinaryOperatorNode;
+    typedef UnaryOperatorNode<T, ALLOC> UnaryOperatorNode;
     typedef BinaryOperator<T> BinaryOperator;
-    typedef BinaryTree<TermNode> ExpressionTree;
+    typedef UnaryOperator<T> UnaryOperator;
+    typedef Collection::BinaryTree<TermNode> ExpressionTree;
 public:
     /** \brief Mapping of variables to their values. */
-    typedef typename ExpressionTree::ValueMap ValueMap;
+    typedef typename TermNode::ValueMap ValueMap;
 
     Expression() {}
     Expression(const Symbol<T>& rSymbol);
@@ -115,7 +116,7 @@ public:
     Expression operator+(Expression&& rB) const
     {
         return BinaryOp(mExpressionTree.clone(),
-                        BinaryOperator::Addition, rB);
+                        BinaryOperator::Addition, rB.mExpressionTree);
     }
 
     Expression operator-(const Expression& rB) const
@@ -129,7 +130,7 @@ public:
     {
         return BinaryOp(
                    mExpressionTree.clone(),
-                   BinaryOperator::Subtraction, rB);
+                   BinaryOperator::Subtraction, rB.mExpressionTree);
     }
 
     Expression operator*(const Expression& rB) const
@@ -162,7 +163,7 @@ public:
 
 
     // Assignment math operators
-    Expression& operator+=<Expression>(const Expression& rB)
+    Expression& operator+=(const Expression& rB)
     {
         mExpressionTree = BinaryOp(
                               mExpressionTree, BinaryOperator::Addition,
@@ -171,7 +172,7 @@ public:
         return *this;
     }
 
-    Expression& operator-=<Expression>(const Expression& rB)
+    Expression& operator-=(const Expression& rB)
     {
         mExpressionTree = BinaryOp(
                               mExpressionTree, BinaryOperator::Subtraction,
@@ -180,7 +181,7 @@ public:
         return *this;
     }
 
-    Expression& operator*=<Expression>(const Expression& rB)
+    Expression& operator*=(const Expression& rB)
     {
         mExpressionTree = BinaryOp(
                               mExpressionTree, BinaryOperator::Multiplication,
@@ -189,7 +190,7 @@ public:
         return *this;
     }
 
-    Expression& operator/=<Expression>(const Expression& rB)
+    Expression& operator/=(const Expression& rB)
     {
         mExpressionTree = BinaryOp(
                               mExpressionTree, BinaryOperator::Division,
@@ -203,7 +204,7 @@ private:
         ExpressionTree& rA, const BinaryOperator& rOperator,
         ExpressionTree& rB)
     {
-        BinaryOperationNode pOperationNode(new BinaryOperationNode(rOperator));
+        BinaryOperatorNode* pOperationNode(new BinaryOperatorNode(rOperator));
         pOperationNode->mpLeftNode = rA.release();
         pOperationNode->mpRightNode = rB.release();
 
@@ -215,7 +216,7 @@ private:
     static Expression UnaryOp(
         ExpressionTree& rA, const UnaryOperator& rOperator)
     {
-        UnaryOperationNode pOperationNode(new UnaryOperationNode(rOperator));
+        UnaryOperatorNode* pOperationNode(new UnaryOperatorNode(rOperator));
         pOperationNode->mpLeftNode = rA.release();
 
         Expression result;

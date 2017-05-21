@@ -27,6 +27,7 @@
 #include <allocators>
 #include <string>
 #include <unordered_map>
+#include <cassert>
 
 namespace Emblem
 {
@@ -41,16 +42,16 @@ public:
 
     virtual T evaluate(const ValueMap& rValueMap);
 
-    virtual bool isOperand() const { return false }
-    virtual bool isOperator() const { return false }
-    virtual bool isSymbol() const { return false }
+    virtual bool isOperand() const { return false; }
+    virtual bool isOperator() const { return false; }
+    virtual bool isSymbol() const { return false; }
 };
 
 template <class T, class Allocator>
 class BinaryOperatorNode : public TermNode<T, Allocator>
 {
 public:
-    BinaryOperatorNode(const BinaryOperator& rBinaryOperator)
+    BinaryOperatorNode(const BinaryOperator<T>& rBinaryOperator)
         : mBinaryOperator(rBinaryOperator) {}
 
     T evaluate(const ValueMap& rValueMap) override
@@ -66,14 +67,14 @@ public:
 
     virtual bool isOperator() const { return true; }
 private:
-    BinaryOperator mBinaryOperator;
+    BinaryOperator<T> mBinaryOperator;
 };
 
 template <class T, class Allocator>
 class UnaryOperatorNode : public TermNode<T, Allocator>
 {
 public:
-    UnaryOperatorNode(const UnaryOperator& rUnaryOperator)
+    UnaryOperatorNode(const UnaryOperator<T>& rUnaryOperator)
         : mUnaryOperator(rUnaryOperator) {}
 
     T evaluate(const ValueMap& rValueMap) override
@@ -90,7 +91,7 @@ public:
 
     virtual bool isOperator() const { return true; }
 private:
-    UnaryOperator mUnaryOperator;
+    UnaryOperator<T> mUnaryOperator;
 };
 
 template <class T, class Allocator>
@@ -118,7 +119,7 @@ class ConstantNode : public TermNode<T, Allocator>
     T* mpData;
 public:
     ConstantNode(const T& rData)
-    mpData(mAllocator.allocate(1))
+        : mpData(mAllocator.allocate(1))
     {
     }
 

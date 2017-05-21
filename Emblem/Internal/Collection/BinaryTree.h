@@ -92,7 +92,7 @@ public:
         return mpHead;
     }
 
-    NodeType* release() const
+    NodeType* release()
     {
         NodeType* pHead = mpHead;
         mpHead = nullptr;

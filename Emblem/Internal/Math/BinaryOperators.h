@@ -23,7 +23,7 @@ template <class T>
 class BinaryOperator
 {
 public:
-    typedef T(Operator)(const T&, const T&);
+    typedef T(*Operator)(const T&, const T&);
     BinaryOperator(
         const Operator& rOperator,
         const std::string& rString)
@@ -42,8 +42,8 @@ public:
     static BinaryOperator Division;
 
 private:
-    Operator mOperator;
-    std::string mString;
+    const Operator mOperator;
+    const std::string mString;
 };
 
 template <class T>
