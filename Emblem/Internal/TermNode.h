@@ -21,6 +21,8 @@
 #include "Collection\BinaryTree.h"
 
 #include "Emblem\Symbol.h"
+#include "Math\BinaryOperators.h"
+#include "Math\UnaryOperator.h"
 
 #include <allocators>
 #include <string>
@@ -48,7 +50,8 @@ template <class T, class Allocator>
 class BinaryOperatorNode : public TermNode<T, Allocator>
 {
 public:
-    typedef T(BinaryOperator)(const T&, const T&);
+    BinaryOperatorNode(const BinaryOperator& rBinaryOperator)
+        : mBinaryOperator(rBinaryOperator) {}
 
     T evaluate(const ValueMap& rValueMap) override
     {
@@ -70,7 +73,8 @@ template <class T, class Allocator>
 class UnaryOperatorNode : public TermNode<T, Allocator>
 {
 public:
-    typedef T(UnaryOperator)(const T&, const T&);
+    UnaryOperatorNode(const UnaryOperator& rUnaryOperator)
+        : mUnaryOperator(rUnaryOperator) {}
 
     T evaluate(const ValueMap& rValueMap) override
     {

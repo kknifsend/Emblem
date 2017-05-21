@@ -63,6 +63,10 @@ class BinaryTree
 {
 public:
     BinaryTree();
+    BinaryTree(const BinaryTree&);
+    BinaryTree(BinaryTree&&);
+    BinaryTree& operator=(const BinaryTree&);
+    BinaryTree& operator=(BinaryTree&&);
     virtual ~BinaryTree();
 
     NodeType* createNode()
@@ -88,11 +92,17 @@ public:
         return mpHead;
     }
 
+    NodeType* release() const
+    {
+        NodeType* pHead = mpHead;
+        mpHead = nullptr;
+        return pHead;
+    }
+
+    BinaryTree clone() const;
+
 private:
     const NodeType* insertToHead(const NodeType* pNode);
-
-    BinaryTree(const BinaryTree&);
-    BinaryTree& operator=(const BinaryTree&);
 
     NodeType* mpHead;
 };
@@ -103,6 +113,38 @@ template <class NodeType>
 BinaryTree<NodeType>::BinaryTree()
     : mpHead(nullptr)
 {
+}
+
+///////////////////////////////////////////////////////////////////////
+
+template <class NodeType>
+BinaryTree<NodeType>::BinaryTree(const BinaryTree&)
+{
+
+}
+
+///////////////////////////////////////////////////////////////////////
+
+template <class NodeType>
+BinaryTree<NodeType>::BinaryTree(BinaryTree&&)
+{
+
+}
+
+///////////////////////////////////////////////////////////////////////
+
+template <class NodeType>
+BinaryTree<NodeType>& BinaryTree<NodeType>::operator=(const BinaryTree&)
+{
+
+}
+
+///////////////////////////////////////////////////////////////////////
+
+template <class NodeType>
+BinaryTree<NodeType>& BinaryTree<NodeType>::operator=(BinaryTree&&)
+{
+
 }
 
 ///////////////////////////////////////////////////////////////////////

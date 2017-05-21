@@ -21,8 +21,8 @@
 #include <string>
 #include <iostream>
 
-#include "Emblem/Internal/ExpressionTree.h"
-#include "Emblem/Internal/Math/ArithmeticExpressions.h"
+#include "Internal\Collection\BinaryTree.h"
+#include "Internal\TermNode.h"
 
 #include "Symbol.h"
 
@@ -70,6 +70,11 @@ namespace Emblem
 template <class T, class ALLOC = std::allocator<T>>
 class Expression
 {
+    typedef TermNode<T, ALLOC> TermNode;
+    typedef BinaryOperationNode<T, ALLOC> BinaryOperationNode;
+    typedef UnaryOperationNode<T, ALLOC> UnaryOperationNode;
+    typedef BinaryOperator<T> BinaryOperator;
+    typedef BinaryTree<TermNode> ExpressionTree;
 public:
     /** \brief Mapping of variables to their values. */
     typedef typename ExpressionTree::ValueMap ValueMap;
@@ -94,117 +99,103 @@ public:
     *
     * Replaces all instances of the given symbol with the supplied expression, constant, or symbol.
     */
-    void substitute(const Symbol<T>& rSymbol, const Expression& rExpr)
-    {
-        mTree.substitute(rSymbol, rExpr.mTree);
-    }
+    void substitute(const Symbol<T>& rSymbol, const Expression& rExpr);
 
-    /** @copydoc substitute()*/
-    void substitute(const Symbol<T>& rSymbol, const T& rConstant)
-    {
-        mTree.substitute(rSymbol, rConstant);
-    }
-
-    /** @copydoc substitute()*/
-    void substitute(const Symbol<T>& rSymbol, const Symbol<T>& rSubs)
-    {
-        mTree.substitute(rSymbol, rSubs);
-    }
-
-
-    /**
-    */
+    /** */
     Expression derivative(const Symbol<T>&) const;
 
-
     // Operators
-    Expression operator+(const Symbol<T>& rB) const
-    {
-        return appendRight<Math::ExpressionAdd<T>>(rB);
-    }
-
-    Expression operator-(const Symbol<T>& rB) const
-    {
-        return appendRight<Math::ExpressionSub<T>>(rB);
-    }
-
-    Expression operator*(const Symbol<T>& rB) const
-    {
-        return appendRight<Math::ExpressionMul<T>>(rB);
-    }
-
-    Expression operator/(const Symbol<T>& rB) const
-    {
-        return appendRight<Math::ExpressionDiv<T>>(rB);
-    }
-
     Expression operator+(const Expression& rB) const
     {
-        return appendRight<Math::ExpressionAdd<T>>(rB.mTree);
+        return BinaryOp(
+            mExpressionTree.clone(), 
+            BinaryOperator::Addition, rB.mExpressionTree.clone());
+    }
+
+    Expression operator+(Expression&& rB) const
+    {
+        return BinaryOp(mExpressionTree.clone(), 
+            BinaryOperator::Addition, rB);
     }
 
     Expression operator-(const Expression& rB) const
     {
-        return appendRight<Math::ExpressionSub<T>>(rB.mTree);
+        return BinaryOp(
+            mExpressionTree.clone(),
+            BinaryOperator::Subtraction, rB.mExpressionTree.clone());
+    }
+
+    Expression operator-(Expression&& rB) const
+    {
+        return BinaryOp(
+            mExpressionTree.clone(), 
+            BinaryOperator::Subtraction, rB);
     }
 
     Expression operator*(const Expression& rB) const
     {
-        return appendRight<Math::ExpressionMul<T>>(rB.mTree);
+        return BinaryOp(
+            mExpressionTree.clone(),
+            BinaryOperator::Multiplication, rB.mExpressionTree.clone());
+    }
+
+    Expression operator*(Expression&& rB) const
+    {
+        return BinaryOp(
+            mExpressionTree.clone(),
+            BinaryOperator::Multiplication, rB.mExpressionTree);
     }
 
     Expression operator/(const Expression& rB) const
     {
-        return appendRight<Math::ExpressionDiv<T>>(rB.mTree);
+        return BinaryOp(
+            mExpressionTree.clone(),
+            BinaryOperator::Division, rB.mExpressionTree.clone());
     }
+
+    Expression operator/(Expression&& rB) const
+    {
+        return BinaryOp(
+            mExpressionTree.clone(),
+            BinaryOperator::Division, rB.mExpressionTree);
+    }
+
 
     // Assignment math operators
-    template <class U>
-    Expression& operator+=(const U& rB)
-    {
-        return appendRightInPlace<Math::ExpressionAdd<T>>(rB);
-    }
-
-    template <class U>
-    Expression& operator-=(const U& rB)
-    {
-        return appendRightInPlace<Math::ExpressionSub<T>>(rB);
-    }
-
-    template <class U>
-    Expression& operator*=(const U& rB)
-    {
-        return appendRightInPlace<Math::ExpressionMul<T>>(rB);
-    }
-
-    template <class U>
-    Expression& operator/=(const U& rB)
-    {
-        return appendRightInPlace<Math::ExpressionDiv<T>>(rB);
-    }
-
-    template <>
     Expression& operator+=<Expression>(const Expression& rB)
     {
-        return appendRightInPlace<Math::ExpressionAdd<T>>(rB.mTree);
+        mExpressionTree = BinaryOp(
+            mExpressionTree, BinaryOperator::Addition, 
+            rB.mExpressionTree.clone());
+
+        return *this;
     }
 
-    template <>
     Expression& operator-=<Expression>(const Expression& rB)
     {
-        return appendRightInPlace<Math::ExpressionSub<T>>(rB.mTree);
+        mExpressionTree = BinaryOp(
+            mExpressionTree, BinaryOperator::Subtraction,
+            rB.mExpressionTree.clone());
+
+        return *this;
     }
 
-    template <>
     Expression& operator*=<Expression>(const Expression& rB)
     {
-        return appendRightInPlace<Math::ExpressionMul<T>>(rB.mTree);
+        mExpressionTree = BinaryOp(
+            mExpressionTree, BinaryOperator::Multiplication,
+            rB.mExpressionTree.clone());
+
+        return *this;
     }
 
-    template <>
     Expression& operator/=<Expression>(const Expression& rB)
     {
-        return appendRightInPlace<Math::ExpressionDiv<T>>(rB.mTree);
+        mExpressionTree = BinaryOp(
+            mExpressionTree, BinaryOperator::Division,
+            rB.mExpressionTree.clone());
+
+        return *this;
     }
 
     Expression operator-() const
@@ -213,44 +204,20 @@ public:
     }
 
 private:
-    // Tree construction functions
-    template <class EXPR, class LEFT, class RIGHT>
-    static Expression CreateRoot(const LEFT& rLeft, const RIGHT& rRight)
+    static Expression BinaryOp(
+        ExpressionTree& rA, const BinaryOperator& rOperator,
+        ExpressionTree& rB)
     {
-        Expression expr;
-        expr.mTree = ExpressionTree::Init<EXPR>(rLeft, rRight);
-        return expr;
-    }
+        BinaryOperationNode pOperationNode(new BinaryOperationNode(rOperator));
+        TermNode* pTermA = rA.release();
+        TermNode* pTermB = rB.release();
 
-    template <class EXPR, class U>
-    static Expression CreateRoot(const U& rU)
-    {
-        Expression expr;
-        expr.mTree = ExpressionTree::Init<EXPR>(rU);
-        return expr;
-    }
+        pOperationNode->mpLeftNode = pTermA;
+        pOperationNode->mpRightNode = pTermB;
 
-    template <class EXPR, class U>
-    Expression appendRight(const U& rParam) const
-    {
-        Expression expression = *this;
-        expression.mTree.addExpressionRight<EXPR>(rParam);
-        return expression;
-    }
-
-    template <class EXPR, class U>
-    Expression& appendRightInPlace(const U& rParam)
-    {
-        mTree.addExpressionRight<EXPR>(rParam);
-        return *this;
-    }
-
-    template <class EXPR, class U>
-    Expression appendLeft(const U& rParam1) const
-    {
-        Expression expression = *this;
-        expression.mTree.addExpressionLeft<EXPR>(rParam1);
-        return expression;
+        Expression result;
+        result.mExpressionTree.insertChildLeft(nullptr, pOperationNode);
+        return result;
     }
 
     // Friendship declarations
@@ -275,7 +242,7 @@ private:
     friend Emblem::Expression<T, ALLOC> (::pow)(const Emblem::Expression<T, ALLOC>& rTree);
     //! @endcond
 
-    ExpressionTree mTree;
+    ExpressionTree mExpressionTree;
 };
 
 ///////////////////////////////////////////////////////////////////////
@@ -283,7 +250,7 @@ private:
 template <class T, class ALLOC>
 Expression<T, ALLOC>::Expression(const Symbol<T>& rSymbol)
 {
-    mTree = ExpressionTree::Init(rSymbol);
+    mExpressionTree.insertChildLeft(new SymbolNode<T, ALLOC>(rSymbol));
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -291,7 +258,7 @@ Expression<T, ALLOC>::Expression(const Symbol<T>& rSymbol)
 template <class T, class ALLOC>
 Expression<T, ALLOC>::Expression(const T& rConstant)
 {
-    mTree = ExpressionTree::Init(rConstant);
+    mExpressionTree.insertChildLeft(new ConstantNode<T, ALLOC>(rConstant));
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -299,7 +266,9 @@ Expression<T, ALLOC>::Expression(const T& rConstant)
 template <class T, class ALLOC>
 T Expression<T, ALLOC>::evaluate(const ValueMap& rValues) const
 {
-    return mTree.evaluate(rValues);
+    const TermNode<T, ALLOC>* pNode = mExpressionTree.head();
+    assert(pNode != nullptr);
+    return pNode->evaluate(rValues);
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -310,67 +279,6 @@ Expression<T, ALLOC> Expression<T, ALLOC>::derivative(const Symbol<T>& rVar) con
     Expression<T> deriv;
 
     return deriv;
-}
-
-///////////////////////////////////////////////////////////////////////
-
-/**
-* \class Symbol
-* \brief Defines a variable in of an expression.
-* \tparam T Type of associated expression.
-*/
-template <class T>
-class Symbol
-{
-public:
-    Symbol(const char* const pStr)
-        : mString(pStr) {}
-
-    bool operator<(const Symbol& rB) const
-    {
-        return mString < rB.mString;
-    }
-
-    bool operator==(const Symbol& rB) const
-    {
-        return mString == rB.mString;
-    }
-
-    template <class U>
-    typename Expression<T> operator+(const U& rU) const
-    {
-        return Expression<T>::CreateRoot<Math::ExpressionAdd<T>>(*this, rU);
-    }
-
-    template <class U>
-    typename Expression<T> operator-(const U& rU) const
-    {
-        return Expression<T>::CreateRoot<Math::ExpressionSub<T>>(*this, rU);
-    }
-
-    template <class U>
-    typename Expression<T> operator*(const U& rU) const
-    {
-        return Expression<T>::CreateRoot<Math::ExpressionMul<T>>(*this, rU);
-    }
-
-    template <class U>
-    typename Expression<T> operator/(const U& rU) const
-    {
-        return Expression<T>::CreateRoot<Math::ExpressionDiv<T>>(*this, rU);
-    }
-
-    typename Expression<T> operator-() const
-    {
-        return Expression<T>::CreateRoot<Math::ExpressionMul<T>>(*this, -1);
-    }
-
-private:
-    template <class T>
-    friend std::ostream& (::operator<<)(std::ostream& rOut, const Symbol<T>&);
-
-    std::string mString;
-};
 }
 
 ///////////////////////////////////////////////////////////////////////

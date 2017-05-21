@@ -36,19 +36,30 @@ public:
         return mOperator(rValue0, rValue1);
     }
 
+    static BinaryOperator Addition;
+    static BinaryOperator Subtraction;
+    static BinaryOperator Multiplication;
+    static BinaryOperator Division;
+
 private:
     Operator mOperator;
     std::string mString;
 };
 
 template <class T>
-T Add(const T& rA, const T& rB)
-{
-    return (rA + rB);
-}
+T Add(const T& rA, const T& rB) { return (rA + rB); }
 
 template <class T>
-T Sub(const T& rA, const T& rB)
-{
-    return (rA - rB);
-}
+T Sub(const T& rA, const T& rB) { return (rA - rB); }
+
+template <class T>
+T Div(const T& rA, const T& rB) { return (rA * rB); }
+
+template <class T>
+T Mul(const T& rA, const T& rB) { return (rA / rB); }
+
+template <class T>
+BinaryOperator<T> BinaryOperator<T>::Addition(Add<T>, " + ");
+BinaryOperator<T> BinaryOperator<T>::Subtraction(Sub<T>, " - ");
+BinaryOperator<T> BinaryOperator<T>::Multiplication(Mul<T>, " * ");
+BinaryOperator<T> BinaryOperator<T>::Division(Div<T>, " / ");

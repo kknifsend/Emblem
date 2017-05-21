@@ -18,6 +18,7 @@
 #pragma once
 
 #include <string>
+#include <cmath>
 
 template <class T>
 class UnaryOperator
@@ -45,3 +46,14 @@ private:
 };
 
 /** Unary Operators */
+template <class T>
+T Sin(const T& rA) { return sin(rA); }
+
+template <class T>
+T Cos(const T& rA) { return cos(rA); }
+
+template <class T>
+T Tan(const T& rA) { return tan(rA); }
+
+template <class T>
+T Identity(const T& rA) { return rA; }
