@@ -50,7 +50,7 @@ int main()
 
     Emblem::Symbol<double> x("x"), y("y"), z("z");
     Emblem::Expression<double> expr0 = x;
-    Emblem::Expression<double> expr1 = expr0 + y;
+    Emblem::Expression<double> expr1 = x + y;
     //Emblem::Expression<double> expr = sin(((x * y) + (z - x) / 5) + z);
     //Emblem::Expression<double> expr = (x * y) - (z + x);
     //std::cout << expr << '\n';

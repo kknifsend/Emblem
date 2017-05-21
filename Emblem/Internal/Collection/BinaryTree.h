@@ -52,6 +52,8 @@ public:
                && (mpRightNode == nullptr);
     }
 
+    virtual NodeType* clone() = 0;
+
     NodeType* cloneTree()
     {
         NodeType* pClone = clone();

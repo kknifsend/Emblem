@@ -42,8 +42,6 @@ public:
 
     virtual T evaluate(const ValueMap& rValueMap) const = 0;
 
-    virtual TermNode* clone() = 0;
-
     virtual bool isOperand() const { return false; }
     virtual bool isOperator() const { return false; }
     virtual bool isSymbol() const { return false; }
