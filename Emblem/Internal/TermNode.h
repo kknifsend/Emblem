@@ -18,9 +18,6 @@
 
 #pragma once
 
-#include "Collection\BinaryTree.h"
-
-#include "Emblem\Symbol.h"
 #include "Math\BinaryOperators.h"
 #include "Math\UnaryOperators.h"
 
@@ -31,6 +28,7 @@
 
 namespace Emblem
 {
+template <class T> class Symbol;
 
 template <class T, class Allocator>
 class TermNode : public Collection::Node<TermNode<T, Allocator>>

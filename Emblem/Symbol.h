@@ -18,6 +18,8 @@
 
 #pragma once
 
+#include "Expression.h"
+
 #include <string>
 #include <iostream>
 
@@ -26,7 +28,6 @@
 /** \namespace Emblem */
 namespace Emblem
 {
-
 /**
 * \class Symbol
 * \brief Defines a variable in of an expression.
@@ -35,6 +36,8 @@ namespace Emblem
 template <class T>
 class Symbol
 {
+    typedef BinaryOperator<T> BinaryOperator;
+    typedef UnaryOperator<T> UnaryOperator;
 public:
     Symbol(const char* const pStr)
         : mString(pStr) {}
@@ -54,13 +57,58 @@ public:
         return mString;
     }
 
+    Expression<T> operator+(const Symbol& rB) const
+    {
+        Expression<T> exprA(*this);
+        Expression<T> exprB(rB);
+        return Expression<T>::BinaryOp(
+            exprA.mExpressionTree, BinaryOperator::Addition,
+            exprB.mExpressionTree);
+    }
+
+    Expression<T> operator-(const Symbol& rB) const
+    {
+        Expression<T> exprA(*this);
+        Expression<T> exprB(rB);
+        return Expression<T>::BinaryOp(
+            exprA.mExpressionTree, BinaryOperator::Subtraction,
+            exprB.mExpressionTree);
+    }
+
+    Expression<T> operator*(const Symbol& rB) const
+    {
+        Expression<T> exprA(*this);
+        Expression<T> exprB(rB);
+        return Expression<T>::BinaryOp(
+            exprA.mExpressionTree, BinaryOperator::Multiplication,
+            exprB.mExpressionTree);
+    }
+
+    Expression<T> operator/(const Symbol& rB) const
+    {
+        Expression<T> exprA(*this);
+        Expression<T> exprB(rB);
+        return Expression<T>::BinaryOp(
+            exprA.mExpressionTree, BinaryOperator::Division,
+            exprB.mExpressionTree);
+    }
+
 private:
     template <class T>
     friend std::ostream& (::operator<<)(std::ostream& rOut, const Symbol<T>&);
 
     std::string mString;
 };
+} // namespace Emblem
 
+///////////////////////////////////////////////////////////////////////
+
+template <class T>
+Emblem::Expression<T> sin(const Symbol<T>& rA)
+{
+    Emblem::Expression<T> exprA(rA);
+    return Emblem::Expression<T, Alloc>::UnaryOp(
+        exprA.mExpressionTree, UnaryOperatorNode<T, Alloc>::Sin);
 }
 
 ///////////////////////////////////////////////////////////////////////

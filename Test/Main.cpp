@@ -27,6 +27,8 @@ using namespace std;
 #include <iostream>
 
 #include "Emblem/Expression.h"
+#include "Emblem/Symbol.h"
+using namespace Emblem;
 
 //using namespace Emblem;
 //
@@ -43,14 +45,14 @@ using namespace std;
 
 int main()
 {
-    Emblem::Expression<double>::ValueMap values;
+    Expression<double>::ValueMap values;
     values["x"] = 4.0;
     values["y"] = 3.0;
     values["z"] = 2.0;
 
-    Emblem::Symbol<double> x("x"), y("y"), z("z");
-    Emblem::Expression<double> expr0 = x;
-    Emblem::Expression<double> expr1 = x + y;
+    Symbol<double> x("x"), y("y"), z("z");
+    Expression<double> expr0 = x;
+    Expression<double> expr1 = x + y;
     //Emblem::Expression<double> expr = sin(((x * y) + (z - x) / 5) + z);
     //Emblem::Expression<double> expr = (x * y) - (z + x);
     //std::cout << expr << '\n';
