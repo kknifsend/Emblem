@@ -30,17 +30,15 @@ using namespace std;
 #include "Emblem/Symbol.h"
 using namespace Emblem;
 
-//using namespace Emblem;
-//
-//double eval(Emblem::Expression<double>::ValueMap& values)
-//{
-//    double x, y, z;
-//    x = values.at("x");
-//    y = values.at("y");
-//    z = values.at("z");
-//
-//    return sin(((x * y) + (z - x) / 5) + z);
-//}
+double eval(Expression<double>::ValueMap& values)
+{
+    double x, y, z;
+    x = values.at("x");
+    y = values.at("y");
+    z = values.at("z");
+
+    return sin(((x * y) + (z - x) / 5) + z);
+}
 
 
 int main()
@@ -50,15 +48,15 @@ int main()
     values["y"] = 3.0;
     values["z"] = 2.0;
 
-    Symbol<double> x("x"), y("y"), z("z");
-    Expression<double> expr0 = x;
-    Expression<double> expr1 = x + y;
-    //Emblem::Expression<double> expr = sin(((x * y) + (z - x) / 5) + z);
+    Expression<double>::Symbol x("x"), y("y"), z("z");
+    //Expression<double> expr0 = x;
+    //Expression<double> expr1 = 5.0 + x;
+    Expression<double> expr = sin(((x * y) + (z - x) / 5) + z);
     //Emblem::Expression<double> expr = (x * y) - (z + x);
     //std::cout << expr << '\n';
 
-    const double result = expr1.evaluate(values);
-    //const double trueResult = eval(values);
+    const double result = expr.evaluate(values);
+    const double trueResult = eval(values);
     std::cout << "Result = " << result << '\n';
 
     std::cout << "\nProgram finished..\n";

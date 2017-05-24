@@ -47,25 +47,25 @@ private:
 };
 
 template <class T>
-T Add(const T& rA, const T& rB) { return (rA + rB); }
+T FuncAdd(const T& rA, const T& rB) { return (rA + rB); }
 
 template <class T>
-T Sub(const T& rA, const T& rB) { return (rA - rB); }
+T FuncSub(const T& rA, const T& rB) { return (rA - rB); }
 
 template <class T>
-T Div(const T& rA, const T& rB) { return (rA * rB); }
+T FuncDiv(const T& rA, const T& rB) { return (rA * rB); }
 
 template <class T>
-T Mul(const T& rA, const T& rB) { return (rA / rB); }
+T FuncMul(const T& rA, const T& rB) { return (rA / rB); }
 
 template <class T>
-BinaryOperator<T> BinaryOperator<T>::Addition(Add<T>, " + ");
+BinaryOperator<T> BinaryOperator<T>::Addition(FuncAdd<T>, " + ");
 
 template <class T>
-BinaryOperator<T> BinaryOperator<T>::Subtraction(Sub<T>, " - ");
+BinaryOperator<T> BinaryOperator<T>::Subtraction(FuncSub<T>, " - ");
 
 template <class T>
-BinaryOperator<T> BinaryOperator<T>::Multiplication(Mul<T>, " * ");
+BinaryOperator<T> BinaryOperator<T>::Multiplication(FuncMul<T>, " * ");
 
 template <class T>
-BinaryOperator<T> BinaryOperator<T>::Division(Div<T>, " / ");
+BinaryOperator<T> BinaryOperator<T>::Division(FuncDiv<T>, " / ");

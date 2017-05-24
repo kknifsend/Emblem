@@ -24,6 +24,30 @@
 #include <iostream>
 
 ///////////////////////////////////////////////////////////////////////
+namespace Emblem
+{
+    template <class T, class Alloc> class Symbol;
+}
+
+template <class T, class Alloc>
+Emblem::Expression<T, Alloc> sin(const Emblem::Symbol<T, Alloc>& rA);
+template <class T, class Alloc>
+Emblem::Expression<T, Alloc> cos(const Emblem::Symbol<T, Alloc>& rA);
+template <class T, class Alloc>
+Emblem::Expression<T, Alloc> tan(const Emblem::Symbol<T, Alloc>& rA);
+
+template <class T, class Alloc>
+Emblem::Expression<T, Alloc> operator+(
+    const T& rA, const Emblem::Symbol<T, Alloc>& rB);
+template <class T, class Alloc>
+Emblem::Expression<T, Alloc> operator-(
+    const T& rA, const Emblem::Symbol<T, Alloc>& rB);
+template <class T, class Alloc>
+Emblem::Expression<T, Alloc> operator*(
+    const T& rA, const Emblem::Symbol<T, Alloc>& rB);
+template <class T, class Alloc>
+Emblem::Expression<T, Alloc> operator/(
+    const T& rA, const Emblem::Symbol<T, Alloc>& rB);
 
 /** \namespace Emblem */
 namespace Emblem
@@ -33,11 +57,12 @@ namespace Emblem
 * \brief Defines a variable in of an expression.
 * \tparam T Type of associated expression.
 */
-template <class T>
+template <class T, class Alloc = std::allocator<T>>
 class Symbol
 {
     typedef BinaryOperator<T> BinaryOperator;
     typedef UnaryOperator<T> UnaryOperator;
+    typedef Expression<T, Alloc> Expression;
 public:
     Symbol(const char* const pStr)
         : mString(pStr) {}
@@ -56,46 +81,76 @@ public:
     {
         return mString;
     }
-
-    Expression<T> operator+(const Symbol& rB) const
+    
+    Expression operator+(const Expression& rB)
     {
-        Expression<T> exprA(*this);
-        Expression<T> exprB(rB);
-        return Expression<T>::BinaryOp(
-            exprA.mExpressionTree, BinaryOperator::Addition,
-            exprB.mExpressionTree);
+        Expression exprA(*this);
+        return BinaryOp(exprA.mExpressionTree, BinaryOperator::Addition,
+            rB.mExpressionTree.clone());
     }
 
-    Expression<T> operator-(const Symbol& rB) const
+    Expression operator-(const Expression& rB)
     {
-        Expression<T> exprA(*this);
-        Expression<T> exprB(rB);
-        return Expression<T>::BinaryOp(
-            exprA.mExpressionTree, BinaryOperator::Subtraction,
-            exprB.mExpressionTree);
+        Expression exprA(*this);
+        return BinaryOp(exprA.mExpressionTree, BinaryOperator::Subtraction,
+            rB.mExpressionTree.clone());
     }
 
-    Expression<T> operator*(const Symbol& rB) const
+    Expression operator*(const Expression& rB)
     {
-        Expression<T> exprA(*this);
-        Expression<T> exprB(rB);
-        return Expression<T>::BinaryOp(
-            exprA.mExpressionTree, BinaryOperator::Multiplication,
-            exprB.mExpressionTree);
+        Expression exprA(*this);
+        return BinaryOp(exprA.mExpressionTree, BinaryOperator::Multiplication,
+            rB.mExpressionTree.clone());
     }
 
-    Expression<T> operator/(const Symbol& rB) const
+    Expression operator/(const Expression& rB)
     {
-        Expression<T> exprA(*this);
-        Expression<T> exprB(rB);
-        return Expression<T>::BinaryOp(
-            exprA.mExpressionTree, BinaryOperator::Division,
-            exprB.mExpressionTree);
+        Expression exprA(*this);
+        return BinaryOp(exprA.mExpressionTree, BinaryOperator::Division,
+            rB.mExpressionTree.clone());
     }
+
+    Expression operator+(Expression&& rB)
+    {
+        Expression exprA(*this);
+        return Expression::BinaryOp(exprA.mExpressionTree, BinaryOperator::Addition,
+            rB.mExpressionTree);
+    }
+
+    Expression operator-(Expression&& rB)
+    {
+        Expression exprA(*this);
+        return Expression::BinaryOp(exprA.mExpressionTree, BinaryOperator::Subtraction,
+            rB.mExpressionTree);
+    }
+
+    Expression operator*(Expression&& rB)
+    {
+        Expression exprA(*this);
+        return Expression::BinaryOp(exprA.mExpressionTree, BinaryOperator::Multiplication,
+            rB.mExpressionTree);
+    }
+
+    Expression operator/(Expression&& rB)
+    {
+        Expression exprA(*this);
+        return Expression::BinaryOp(exprA.mExpressionTree, BinaryOperator::Division,
+            rB.mExpressionTree);
+    }
+
 
 private:
     template <class T>
     friend std::ostream& (::operator<<)(std::ostream& rOut, const Symbol<T>&);
+
+    friend Emblem::Expression<T, Alloc> (::sin)(const Emblem::Symbol<T, Alloc>& rA);
+    friend Emblem::Expression<T, Alloc> (::cos)(const Emblem::Symbol<T, Alloc>& rA);
+    friend Emblem::Expression<T, Alloc> (::tan)(const Emblem::Symbol<T, Alloc>& rA);
+    friend Emblem::Expression<T, Alloc> (::operator+)(const T& rA, const Emblem::Symbol<T, Alloc>& rB);
+    friend Emblem::Expression<T, Alloc> (::operator-)(const T& rA, const Emblem::Symbol<T, Alloc>& rB);
+    friend Emblem::Expression<T, Alloc> (::operator*)(const T& rA, const Emblem::Symbol<T, Alloc>& rB);
+    friend Emblem::Expression<T, Alloc> (::operator/)(const T& rA, const Emblem::Symbol<T, Alloc>& rB);
+
 
     std::string mString;
 };
@@ -103,13 +158,83 @@ private:
 
 ///////////////////////////////////////////////////////////////////////
 
-template <class T>
-Emblem::Expression<T> sin(const Symbol<T>& rA)
+template <class T, class Alloc>
+Emblem::Expression<T, Alloc> sin(const Emblem::Symbol<T, Alloc>& rA)
 {
-    Emblem::Expression<T> exprA(rA);
+    Emblem::Expression<T, Alloc> exprA(rA);
     return Emblem::Expression<T, Alloc>::UnaryOp(
         exprA.mExpressionTree, UnaryOperatorNode<T, Alloc>::Sin);
 }
+
+///////////////////////////////////////////////////////////////////////
+
+template <class T, class Alloc>
+Emblem::Expression<T, Alloc> cos(const Emblem::Symbol<T, Alloc>& rA)
+{
+    Emblem::Expression<T, Alloc> exprA(rA);
+    return Emblem::Expression<T, Alloc>::UnaryOp(
+        exprA.mExpressionTree, UnaryOperatorNode<T, Alloc>::Cos);
+}
+
+///////////////////////////////////////////////////////////////////////
+
+template <class T, class Alloc>
+Emblem::Expression<T, Alloc> tan(const Emblem::Symbol<T, Alloc>& rA)
+{
+    Emblem::Expression<T, Alloc> exprA(rA);
+    return Emblem::Expression<T, Alloc>::UnaryOp(
+        exprA.mExpressionTree, UnaryOperatorNode<T, Alloc>::Tan);
+}
+
+
+///////////////////////////////////////////////////////////////////////
+
+template <class T, class Alloc>
+Emblem::Expression<T, Alloc> operator+(
+    const T& rA, const Emblem::Symbol<T, Alloc>& rB)
+{
+    Emblem::Expression<T, Alloc> exprA(rA);
+    Emblem::Expression<T, Alloc> exprB(rB);
+    return BinaryOp(exprA.mExpressionTree, BinaryOperator::Addition,
+        exprB.mExpressionTree);
+}
+
+///////////////////////////////////////////////////////////////////////
+
+template <class T, class Alloc>
+Emblem::Expression<T, Alloc> operator-(
+    const T& rA, const Emblem::Symbol<T, Alloc>& rB)
+{
+    Emblem::Expression<T, Alloc> exprA(rA);
+    Emblem::Expression<T, Alloc> exprB(rB);
+    return BinaryOp(exprA.mExpressionTree, BinaryOperator::Subtraction,
+        exprB.mExpressionTree);
+}
+
+///////////////////////////////////////////////////////////////////////
+
+template <class T, class Alloc>
+Emblem::Expression<T, Alloc> operator*(
+    const T& rA, const Emblem::Symbol<T, Alloc>& rB)
+{
+    Emblem::Expression<T, Alloc> exprA(rA);
+    Emblem::Expression<T, Alloc> exprB(rB);
+    return BinaryOp(exprA.mExpressionTree, BinaryOperator::Multiplication,
+        exprB.mExpressionTree);
+}
+
+///////////////////////////////////////////////////////////////////////
+
+template <class T, class Alloc>
+Emblem::Expression<T, Alloc> operator/(
+    const T& rA, const Emblem::Symbol<T, Alloc>& rB)
+{
+    Emblem::Expression<T, Alloc> exprA(rA);
+    Emblem::Expression<T, Alloc> exprB(rB);
+    return BinaryOp(exprA.mExpressionTree, BinaryOperator::Division,
+        exprB.mExpressionTree);
+}
+
 
 ///////////////////////////////////////////////////////////////////////
 

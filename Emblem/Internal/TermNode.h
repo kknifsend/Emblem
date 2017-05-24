@@ -28,7 +28,7 @@
 
 namespace Emblem
 {
-template <class T> class Symbol;
+template <class T, class Alloc> class Symbol;
 
 template <class T, class Allocator>
 class TermNode : public Collection::Node<TermNode<T, Allocator>>
@@ -105,9 +105,9 @@ private:
 template <class T, class Allocator>
 class SymbolNode : public TermNode<T, Allocator>
 {
-    const Symbol<T> mSymbol;
+    const Symbol<T, Allocator> mSymbol;
 public:
-    SymbolNode(const Symbol<T>& rSymbol)
+    SymbolNode(const Symbol<T, Allocator>& rSymbol)
         : mSymbol(rSymbol)
     {}
 

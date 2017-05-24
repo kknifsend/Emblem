@@ -23,7 +23,7 @@
 template <class T>
 class UnaryOperator
 {
-    typedef T(Operator)(const T&);
+    typedef T(*Operator)(const T&);
 public:
     UnaryOperator(
         Operator op,
@@ -45,32 +45,32 @@ public:
     static UnaryOperator Identity;
 
 private:
-    Operator mOperator;
+    const Operator mOperator;
     std::string mOpenString;
     std::string mCloseString;
 };
 
 /** Unary Operators */
 template <class T>
-T Sin(const T& rA) { return sin(rA); }
+T FuncSin(const T& rA) { return sin(rA); }
 
 template <class T>
-T Cos(const T& rA) { return cos(rA); }
+T FuncCos(const T& rA) { return cos(rA); }
 
 template <class T>
-T Tan(const T& rA) { return tan(rA); }
+T FuncTan(const T& rA) { return tan(rA); }
 
 template <class T>
-T Identity(const T& rA) { return rA; }
+T FuncIdentity(const T& rA) { return rA; }
 
 template <class T>
-UnaryOperator<T> UnaryOperator<T>::Sin(Sin<T>, "sin(", ")");
+UnaryOperator<T> UnaryOperator<T>::Sin(FuncSin<T>, "sin(", ")");
 
 template <class T>
-UnaryOperator<T> UnaryOperator<T>::Cos(Cos<T>, "cos(", ")");
+UnaryOperator<T> UnaryOperator<T>::Cos(FuncCos<T>, "cos(", ")");
 
 template <class T>
-UnaryOperator<T> UnaryOperator<T>::Tan(Tan<T>, "tan(", ")");
+UnaryOperator<T> UnaryOperator<T>::Tan(FuncTan<T>, "tan(", ")");
 
 template <class T>
-UnaryOperator<T> UnaryOperator<T>::Identity(Identity<T>, "", "");
+UnaryOperator<T> UnaryOperator<T>::Identity(FuncIdentity<T>, "", "");
