@@ -37,7 +37,7 @@ double eval(Expression<double>::ValueMap& values)
     y = values.at("y");
     z = values.at("z");
 
-    return sin(((x * y) + (z - x) / 5) + z);
+    return (((x * y) + (z - x) / 5.0) + z);
 }
 
 
@@ -51,14 +51,15 @@ int main()
     Expression<double>::Symbol x("x"), y("y"), z("z");
     //Expression<double> expr0 = x;
     //Expression<double> expr1 = 5.0 + x;
-    //Expression<double> expr = sin(((x * y) + (z - x) / 5) + z);
-    Expression<double> expr = (x * y) / 2.0;
+    Expression<double> expr = (((x * y) + (z - x) / 5.0) + z);
+    //Expression<double> expr = (x - y) + z;
     //Emblem::Expression<double> expr = (x * y) - (z + x);
     //std::cout << expr << '\n';
 
     const double result = expr.evaluate(values);
     const double trueResult = eval(values);
     std::cout << "Result = " << result << '\n';
+    std::cout << "TruResult = " << trueResult << '\n';
 
     std::cout << "\nProgram finished..\n";
     cin.get();

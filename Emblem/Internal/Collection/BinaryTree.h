@@ -59,12 +59,12 @@ public:
         NodeType* pClone = clone();
         if (mpLeftNode != nullptr)
         {
-            pClone->mpLeftNode = mpLeftNode->clone();
+            pClone->mpLeftNode = mpLeftNode->cloneTree();
         }
 
         if (mpRightNode != nullptr)
         {
-            pClone->mpRightNode = mpRightNode->clone();
+            pClone->mpRightNode = mpRightNode->cloneTree();
         }
 
         return pClone;
