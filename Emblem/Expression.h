@@ -41,6 +41,13 @@ template <class T, class Alloc>
 Emblem::Expression<T, Alloc> cos(const Emblem::Expression<T, Alloc>&);
 template <class T, class Alloc>
 Emblem::Expression<T, Alloc> tan(const Emblem::Expression<T, Alloc>&);
+template <class T, class Alloc>
+Emblem::Expression<T, Alloc> sin(Emblem::Expression<T, Alloc>&&);
+template <class T, class Alloc>
+Emblem::Expression<T, Alloc> cos(Emblem::Expression<T, Alloc>&&);
+template <class T, class Alloc>
+Emblem::Expression<T, Alloc> tan(Emblem::Expression<T, Alloc>&&);
+
 
 template <class T, class Alloc>
 Emblem::Expression<T, Alloc> operator+(
@@ -54,6 +61,20 @@ Emblem::Expression<T, Alloc> operator*(
 template <class T, class Alloc>
 Emblem::Expression<T, Alloc> operator/(
     const T& rA, const Emblem::Expression<T, Alloc>& rB);
+
+template <class T, class Alloc>
+Emblem::Expression<T, Alloc> operator+(
+    const T& rA, Emblem::Expression<T, Alloc>&& rB);
+template <class T, class Alloc>
+Emblem::Expression<T, Alloc> operator-(
+    const T& rA, Emblem::Expression<T, Alloc>&& rB);
+template <class T, class Alloc>
+Emblem::Expression<T, Alloc> operator*(
+    const T& rA, Emblem::Expression<T, Alloc>&& rB);
+template <class T, class Alloc>
+Emblem::Expression<T, Alloc> operator/(
+    const T& rA, Emblem::Expression<T, Alloc>&& rB);
+
 
 ///////////////////////////////////////////////////////////////////////
 
@@ -91,6 +112,30 @@ public:
     Expression(const T& rConstant)
     {
         mExpressionTree.insertToHead(new ConstantNode(rConstant));
+    }
+
+    Expression(const Expression&)
+    {
+        int a = 0;
+        static_assert(false, "You fucked up.");
+    }
+
+    Expression(Expression&& rOther)
+    {
+        mExpressionTree.swap(rOther.mExpressionTree);
+    }
+
+    Expression& operator=(Expression&& rOther)
+    {
+        mExpressionTree.swap(rOther.mExpressionTree);
+        return *this;
+    }
+
+    Expression& operator=(const Expression& rOther)
+    {
+        /*mExpressionTree.swap(rOther.mExpressionTree);*/
+        static_assert(false, "You fucked up.");
+        return *this;
     }
 
     /**
@@ -208,7 +253,7 @@ private:
         pOperationNode->mpRightNode = rB.release();
 
         Expression result;
-        result.mExpressionTree.insertChildLeft(nullptr, pOperationNode);
+        result.mExpressionTree.insertToHead(pOperationNode);
         return result;
     }
 
@@ -219,7 +264,7 @@ private:
         pOperationNode->mpLeftNode = rA.release();
 
         Expression result;
-        result.mExpressionTree.insertChildLeft(nullptr, pOperationNode);
+        result.mExpressionTree.insertToHead(pOperationNode);
         return result;
     }
 
@@ -228,10 +273,17 @@ private:
     friend Expression<T, Alloc> (::sin)(const Expression<T, Alloc>&);
     friend Expression<T, Alloc> (::cos)(const Expression<T, Alloc>&);
     friend Expression<T, Alloc> (::tan)(const Expression<T, Alloc>&);
+    friend Expression<T, Alloc>(::sin)(Expression<T, Alloc>&&);
+    friend Expression<T, Alloc>(::cos)(Expression<T, Alloc>&&);
+    friend Expression<T, Alloc>(::tan)(Expression<T, Alloc>&&);
     friend Expression<T, Alloc> (::operator+)(const T& rA, const Expression<T, Alloc>& rB);
     friend Expression<T, Alloc> (::operator-)(const T& rA, const Expression<T, Alloc>& rB);
     friend Expression<T, Alloc> (::operator*)(const T& rA, const Expression<T, Alloc>& rB);
     friend Expression<T, Alloc> (::operator/)(const T& rA, const Expression<T, Alloc>& rB);
+    friend Expression<T, Alloc>(::operator+)(const T& rA, Expression<T, Alloc>&& rB);
+    friend Expression<T, Alloc>(::operator-)(const T& rA, Expression<T, Alloc>&& rB);
+    friend Expression<T, Alloc>(::operator*)(const T& rA, Expression<T, Alloc>&& rB);
+    friend Expression<T, Alloc>(::operator/)(const T& rA, Expression<T, Alloc>&& rB);
 
     ExpressionTree mExpressionTree;
 };
@@ -250,6 +302,16 @@ Emblem::Expression<T, Alloc> sin(const Emblem::Expression<T, Alloc>& rTree)
 ///////////////////////////////////////////////////////////////////////
 
 template <class T, class Alloc>
+Emblem::Expression<T, Alloc> sin(Emblem::Expression<T, Alloc>&& rTree)
+{
+    using namespace Emblem;
+    return Expression<T, Alloc>::UnaryOp(
+        rTree.mExpressionTree, UnaryOperator<T>::Sin);
+}
+
+///////////////////////////////////////////////////////////////////////
+
+template <class T, class Alloc>
 Emblem::Expression<T, Alloc> cos(const Emblem::Expression<T, Alloc>& rTree)
 {
     using namespace Emblem;
@@ -260,11 +322,31 @@ Emblem::Expression<T, Alloc> cos(const Emblem::Expression<T, Alloc>& rTree)
 ///////////////////////////////////////////////////////////////////////
 
 template <class T, class Alloc>
+Emblem::Expression<T, Alloc> cos(Emblem::Expression<T, Alloc>&& rTree)
+{
+    using namespace Emblem;
+    return Expression<T, Alloc>::UnaryOp(
+        rTree.mExpressionTree, UnaryOperator<T>::Cos);
+}
+
+///////////////////////////////////////////////////////////////////////
+
+template <class T, class Alloc>
 Emblem::Expression<T, Alloc> tan(const Emblem::Expression<T, Alloc>& rTree)
 {
     using namespace Emblem;
     return Expression<T, Alloc>::UnaryOp(
                rTree.mExpressionTree.clone(), UnaryOperator<T>::Tan);
+}
+
+///////////////////////////////////////////////////////////////////////
+
+template <class T, class Alloc>
+Emblem::Expression<T, Alloc> tan(Emblem::Expression<T, Alloc>&& rTree)
+{
+    using namespace Emblem;
+    return Expression<T, Alloc>::UnaryOp(
+        rTree.mExpressionTree, UnaryOperator<T>::Tan);
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -282,6 +364,18 @@ Emblem::Expression<T, Alloc> operator+(
 ///////////////////////////////////////////////////////////////////////
 
 template <class T, class Alloc>
+Emblem::Expression<T, Alloc> operator+(
+    const T& rA, Emblem::Expression<T, Alloc>&& rB)
+{
+    using namespace Emblem;
+    Expression<T, Alloc> exprA(rA);
+    return BinaryOp(exprA.mExpressionTree, BinaryOperator::Addition,
+        rB.mExpressionTree);
+}
+
+///////////////////////////////////////////////////////////////////////
+
+template <class T, class Alloc>
 Emblem::Expression<T, Alloc> operator-(
     const T& rA, const Emblem::Expression<T, Alloc>& rB)
 {
@@ -289,6 +383,18 @@ Emblem::Expression<T, Alloc> operator-(
     Expression<T, Alloc> exprA(rA);
     return BinaryOp(exprA.mExpressionTree, BinaryOperator::Subtraction,
         rB.mExpressionTree.clone());
+}
+
+///////////////////////////////////////////////////////////////////////
+
+template <class T, class Alloc>
+Emblem::Expression<T, Alloc> operator-(
+    const T& rA, Emblem::Expression<T, Alloc>&& rB)
+{
+    using namespace Emblem;
+    Expression<T, Alloc> exprA(rA);
+    return BinaryOp(exprA.mExpressionTree, BinaryOperator::Subtraction,
+        rB.mExpressionTree);
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -306,6 +412,18 @@ Emblem::Expression<T, Alloc> operator*(
 ///////////////////////////////////////////////////////////////////////
 
 template <class T, class Alloc>
+Emblem::Expression<T, Alloc> operator*(
+    const T& rA, Emblem::Expression<T, Alloc>&& rB)
+{
+    using namespace Emblem;
+    Expression<T, Alloc> exprA(rA);
+    return BinaryOp(exprA.mExpressionTree, BinaryOperator::Multiplication,
+        rB.mExpressionTree);
+}
+
+///////////////////////////////////////////////////////////////////////
+
+template <class T, class Alloc>
 Emblem::Expression<T, Alloc> operator/(
     const T& rA, const Emblem::Expression<T, Alloc>& rB)
 {
@@ -313,6 +431,18 @@ Emblem::Expression<T, Alloc> operator/(
     Expression<T, Alloc> exprA(rA);
     return BinaryOp(exprA.mExpressionTree, BinaryOperator::Division,
         rB.mExpressionTree.clone());
+}
+
+///////////////////////////////////////////////////////////////////////
+
+template <class T, class Alloc>
+Emblem::Expression<T, Alloc> operator/(
+    const T& rA, Emblem::Expression<T, Alloc>&& rB)
+{
+    using namespace Emblem;
+    Expression<T, Alloc> exprA(rA);
+    return BinaryOp(exprA.mExpressionTree, BinaryOperator::Division,
+        rB.mExpressionTree);
 }
 
 

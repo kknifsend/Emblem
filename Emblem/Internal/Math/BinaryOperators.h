@@ -53,10 +53,10 @@ template <class T>
 T FuncSub(const T& rA, const T& rB) { return (rA - rB); }
 
 template <class T>
-T FuncDiv(const T& rA, const T& rB) { return (rA * rB); }
+T FuncMul(const T& rA, const T& rB) { return (rA * rB); }
 
 template <class T>
-T FuncMul(const T& rA, const T& rB) { return (rA / rB); }
+T FuncDiv(const T& rA, const T& rB) { return (rA / rB); }
 
 template <class T>
 BinaryOperator<T> BinaryOperator<T>::Addition(FuncAdd<T>, " + ");

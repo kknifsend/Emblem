@@ -51,7 +51,8 @@ int main()
     Expression<double>::Symbol x("x"), y("y"), z("z");
     //Expression<double> expr0 = x;
     //Expression<double> expr1 = 5.0 + x;
-    Expression<double> expr = sin(((x * y) + (z - x) / 5) + z);
+    //Expression<double> expr = sin(((x * y) + (z - x) / 5) + z);
+    Expression<double> expr = (x * y) / 2.0;
     //Emblem::Expression<double> expr = (x * y) - (z + x);
     //std::cout << expr << '\n';
 

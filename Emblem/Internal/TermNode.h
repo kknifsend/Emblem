@@ -38,6 +38,12 @@ public:
     std::string, T, std::hash<std::string>,
         std::equal_to<std::string>, Allocator> ValueMap;
 
+    TermNode()
+        : Collection::Node<TermNode<T, Allocator>>()
+    {
+
+    }
+
     virtual T evaluate(const ValueMap& rValueMap) const = 0;
 
     virtual bool isOperand() const { return false; }
@@ -50,7 +56,7 @@ class BinaryOperatorNode : public TermNode<T, Allocator>
 {
 public:
     BinaryOperatorNode(const BinaryOperator<T>& rBinaryOperator)
-        : mBinaryOperator(rBinaryOperator) {}
+        : TermNode(), mBinaryOperator(rBinaryOperator) {}
 
     T evaluate(const ValueMap& rValueMap) const override
     {
@@ -78,7 +84,7 @@ class UnaryOperatorNode : public TermNode<T, Allocator>
 {
 public:
     UnaryOperatorNode(const UnaryOperator<T>& rUnaryOperator)
-        : mUnaryOperator(rUnaryOperator) {}
+        : TermNode(), mUnaryOperator(rUnaryOperator) {}
 
     T evaluate(const ValueMap& rValueMap) const override
     {
@@ -108,7 +114,7 @@ class SymbolNode : public TermNode<T, Allocator>
     const Symbol<T, Allocator> mSymbol;
 public:
     SymbolNode(const Symbol<T, Allocator>& rSymbol)
-        : mSymbol(rSymbol)
+        : TermNode(), mSymbol(rSymbol)
     {}
 
     T evaluate(const ValueMap& rValueMap) const override
@@ -134,6 +140,7 @@ public:
     ConstantNode(const T& rData)
         : mpData(mAllocator.allocate(1))
     {
+        *mpData = rData;
     }
 
     T evaluate(const ValueMap& rValueMap) const override

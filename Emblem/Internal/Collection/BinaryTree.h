@@ -117,6 +117,11 @@ public:
         return pHead;
     }
 
+    void swap(BinaryTree<NodeType>& rOther)
+    {
+        std::swap(mpHead, rOther.mpHead);
+    }
+
     BinaryTree clone() const;
 
 private:
@@ -140,7 +145,7 @@ BinaryTree<NodeType>::BinaryTree(const BinaryTree& rOther)
 {
     if (rOther.mpHead != nullptr)
     {
-        mpHead = rOther.mpHead->clone();
+        mpHead = rOther.mpHead->cloneTree();
     }
 }
 
@@ -150,7 +155,6 @@ template <class NodeType>
 BinaryTree<NodeType>::BinaryTree(BinaryTree&& rOther)
     : mpHead(nullptr)
 {
-    clear();
     mpHead = rOther.mpHead;
     rOther.mpHead = nullptr;
 }
@@ -165,7 +169,7 @@ BinaryTree<NodeType>& BinaryTree<NodeType>::operator=(const BinaryTree& rOther)
         clear();
         if (rOther.mpHead != nullptr)
         {
-            mpHead = rOther.mpHead->clone();
+            mpHead = rOther.mpHead->cloneTree();
         }
     }
     return *this;
@@ -176,6 +180,7 @@ BinaryTree<NodeType>& BinaryTree<NodeType>::operator=(const BinaryTree& rOther)
 template <class NodeType>
 BinaryTree<NodeType>& BinaryTree<NodeType>::operator=(BinaryTree&& rOther)
 {
+    clear();
     mpHead = rOther.mpHead;
     rOther.mpHead = nullptr;
 
@@ -237,7 +242,7 @@ BinaryTree<NodeType> BinaryTree<NodeType>::clone() const
     BinaryTree tree;
     if (mpHead != nullptr)
     {
-        tree.mpHead = mpHead->clone();
+        tree.mpHead = mpHead->cloneTree();
     }
     return tree;
 }
