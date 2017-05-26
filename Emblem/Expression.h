@@ -114,30 +114,6 @@ public:
         mExpressionTree.insertToHead(new ConstantNode(rConstant));
     }
 
-    Expression(const Expression&)
-    {
-        int a = 0;
-        static_assert(false, "You fucked up.");
-    }
-
-    Expression(Expression&& rOther)
-    {
-        mExpressionTree.swap(rOther.mExpressionTree);
-    }
-
-    Expression& operator=(Expression&& rOther)
-    {
-        mExpressionTree.swap(rOther.mExpressionTree);
-        return *this;
-    }
-
-    Expression& operator=(const Expression& rOther)
-    {
-        /*mExpressionTree.swap(rOther.mExpressionTree);*/
-        static_assert(false, "You fucked up.");
-        return *this;
-    }
-
     /**
     * \brief Function used to evaluate an expression given mapping of values.
     *
