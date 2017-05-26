@@ -134,13 +134,17 @@ public:
 template <class T, class Allocator>
 class ConstantNode : public TermNode<T, Allocator>
 {
-    Allocator mAllocator;
-    T* mpData;
 public:
     ConstantNode(const T& rData)
         : mpData(mAllocator.allocate(1))
     {
         *mpData = rData;
+    }
+
+    ConstantNode(const ConstantNode& rOther)
+        : mpData(mAllocator.allocate(1))
+    {
+        *mpData = *rOther.mpData;
     }
 
     T evaluate(const ValueMap& rValueMap) const override
@@ -160,6 +164,11 @@ public:
     }
 
     virtual bool isOperand() const { return true; }
+private:
+    ConstantNode& operator=(const ConstantNode&);
+
+    Allocator mAllocator;
+    T* mpData;
 };
 
 }
