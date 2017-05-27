@@ -126,7 +126,11 @@ public:
     T evaluate(const ValueMap& rValues) const
     {
         const TermNode* pNode = mExpressionTree.head();
-        assert(pNode != nullptr);
+        if (pNode == nullptr)
+        {
+            assert(0);
+            return T();
+        }
         return pNode->evaluate(rValues);
     }
 
@@ -135,7 +139,15 @@ public:
     *
     * Replaces all instances of the given symbol with the supplied expression, constant, or symbol.
     */
-    void substitute(const Symbol& rSymbol, const Expression& rExpr) {}
+    void substitute(const Symbol& rSymbol, const Expression& rExpr)
+    {
+        Expression::Substitute(*this, rSymbol, rExpr.mExpressionTree.clone());
+    }
+
+    void substitute(const Symbol& rSymbol, Expression&& rExpr)
+    {
+        Expression::Substitute(*this, rSymbol, rExpr.mExpressionTree);
+    }
 
     /** */
     Expression derivative(const Symbol&) const {}
@@ -157,16 +169,16 @@ public:
                         rB.mExpressionTree);
     }
 
-    Expression operator+(const Expression& rB) &&
+    Expression operator+(const Expression& rB)&&
     {
         return BinaryOp(mExpressionTree, BinaryOperator::Addition,
-            rB.mExpressionTree.clone());
+                        rB.mExpressionTree.clone());
     }
 
-    Expression operator+(Expression&& rB) &&
+    Expression operator+(Expression&& rB)&&
     {
         return BinaryOp(mExpressionTree, BinaryOperator::Addition,
-            rB.mExpressionTree);
+                        rB.mExpressionTree);
     }
 
     ///////////////////////////////////////////////////
@@ -183,17 +195,17 @@ public:
         return BinaryOp(mExpressionTree.clone(),BinaryOperator::Subtraction,
                         rB.mExpressionTree);
     }
-    
-    Expression operator-(const Expression& rB) &&
+
+    Expression operator-(const Expression& rB)&&
     {
         return BinaryOp(mExpressionTree, BinaryOperator::Subtraction,
-            rB.mExpressionTree.clone());
+                        rB.mExpressionTree.clone());
     }
 
-    Expression operator-(Expression&& rB) &&
+    Expression operator-(Expression&& rB)&&
     {
         return BinaryOp(mExpressionTree, BinaryOperator::Subtraction,
-            rB.mExpressionTree);
+                        rB.mExpressionTree);
     }
 
     ///////////////////////////////////////////////////
@@ -211,16 +223,16 @@ public:
                         rB.mExpressionTree);
     }
 
-    Expression operator*(const Expression& rB) &&
+    Expression operator*(const Expression& rB)&&
     {
         return BinaryOp(mExpressionTree, BinaryOperator::Multiplication,
-            rB.mExpressionTree.clone());
+                        rB.mExpressionTree.clone());
     }
 
-    Expression operator*(Expression&& rB) &&
+    Expression operator*(Expression&& rB)&&
     {
         return BinaryOp(mExpressionTree, BinaryOperator::Multiplication,
-            rB.mExpressionTree);
+                        rB.mExpressionTree);
     }
 
     ///////////////////////////////////////////////////
@@ -238,16 +250,16 @@ public:
                         rB.mExpressionTree);
     }
 
-    Expression operator/(const Expression& rB) &&
+    Expression operator/(const Expression& rB)&&
     {
         return BinaryOp(mExpressionTree, BinaryOperator::Division,
-            rB.mExpressionTree.clone());
+                        rB.mExpressionTree.clone());
     }
 
-    Expression operator/(Expression&& rB) &&
+    Expression operator/(Expression&& rB)&&
     {
         return BinaryOp(mExpressionTree, BinaryOperator::Division,
-            rB.mExpressionTree);
+                        rB.mExpressionTree);
     }
 
     // Assignment math operators
@@ -279,6 +291,8 @@ public:
         return *this;
     }
 
+    void Output(std::ostream& rOut) const;
+
 private:
     static Expression BinaryOp(
         ExpressionTree& rA, const BinaryOperator& rOperator,
@@ -304,6 +318,10 @@ private:
         return result;
     }
 
+    static void Substitute(
+        ExpressionTree& rExpr, const Symbol& rSymbol,
+        ExpressionTree& rSubExpr);
+
     friend class Symbol;
 
     friend Expression<T, Alloc> (::sin)(const Expression<T, Alloc>&);
@@ -323,6 +341,86 @@ private:
 
     ExpressionTree mExpressionTree;
 };
+
+///////////////////////////////////////////////////////////////////////
+
+template <class T, class Alloc>
+void Expression<T, Alloc>::Substitute(
+    ExpressionTree& rExpr, const Symbol& rSymbol,
+    ExpressionTree& rSubExpr)
+{
+    if ((rExpr.head() == nullptr) || (rSubExpr.head() == nullptr))
+    {
+        return;
+    }
+
+    const SymbolNode* pHeadSymbol =
+        dynamic_cast<const SymbolNode*>(rExpr.head());
+    if ((pHeadSymbol != nullptr) && (pHeadSymbol->GetSymbol() == rSymbol))
+    {
+        rExpr.insertToHead(rSubExpr.release());
+        return;
+    }
+
+    std::stack<const TermNode*> nodeStack;
+    nodesToChildCheck.push(rExpr.head());
+    while (!nodeStack.empty())
+    {
+        const TermNode* pCurNode = nodeStack.top();
+        nodeStack.pop();
+        if ((pCurNode == nullptr) || pCurNode->isLeaf())
+        {
+            continue;
+        }
+
+        if (pCurNode->mpLeftNode->isSymbol())
+        {
+            const SymbolNode* pLeftSymbol =
+                dynamic_cast<const SymbolNode*>(pCurNode->mpLeftNode);
+            assert(pLeftSymbol != nullptr);
+            if (pLeftSymbol->GetSymbol() == rSymbol)
+            {
+                ExpressionTree exprSub = rSubExpr.clone();
+                rExpr.replace(pCurNode->mpLeftNode, exprSub.release());
+            }
+        }
+        else
+        {
+            nodeStack.push(pCurNode->mpLeftNode);
+        }
+
+        if (pCurNode->mpRightNode->isSymbol())
+        {
+            const SymbolNode* pRightSymbol =
+                dynamic_cast<const SymbolNode*>(pCurNode->mpRightNode);
+            assert(pRightSymbol != nullptr);
+            if (pRightSymbol->GetSymbol() == rSymbol)
+            {
+                ExpressionTree exprSub = rSubExpr.clone();
+                rExpr.replace(pCurNode->pRightSymbol, exprSub.release());
+            }
+        }
+        else
+        {
+            nodeStack.push(pCurNode->mpRightNode);
+        }
+    }
+}
+
+///////////////////////////////////////////////////////////////////////
+
+template <class T, class Alloc>
+void Expression<T, Alloc>::Output(std::ostream& rOut) const
+{
+    const TermNode* pHead = mExpressionTree.head();
+    if (pHead == nullptr)
+    {
+        return;
+    }
+
+
+}
+
 } // namespace Emblem
 
 ///////////////////////////////////////////////////////////////////////
@@ -342,7 +440,7 @@ Emblem::Expression<T, Alloc> sin(Emblem::Expression<T, Alloc>&& rTree)
 {
     using namespace Emblem;
     return Expression<T, Alloc>::UnaryOp(
-        rTree.mExpressionTree, UnaryOperator<T>::Sin);
+               rTree.mExpressionTree, UnaryOperator<T>::Sin);
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -362,7 +460,7 @@ Emblem::Expression<T, Alloc> cos(Emblem::Expression<T, Alloc>&& rTree)
 {
     using namespace Emblem;
     return Expression<T, Alloc>::UnaryOp(
-        rTree.mExpressionTree, UnaryOperator<T>::Cos);
+               rTree.mExpressionTree, UnaryOperator<T>::Cos);
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -382,7 +480,7 @@ Emblem::Expression<T, Alloc> tan(Emblem::Expression<T, Alloc>&& rTree)
 {
     using namespace Emblem;
     return Expression<T, Alloc>::UnaryOp(
-        rTree.mExpressionTree, UnaryOperator<T>::Tan);
+               rTree.mExpressionTree, UnaryOperator<T>::Tan);
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -394,7 +492,7 @@ Emblem::Expression<T, Alloc> operator+(
     using namespace Emblem;
     Expression<T, Alloc> exprA(rA);
     return BinaryOp(exprA.mExpressionTree, BinaryOperator::Addition,
-        rB.mExpressionTree.clone());
+                    rB.mExpressionTree.clone());
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -406,7 +504,7 @@ Emblem::Expression<T, Alloc> operator+(
     using namespace Emblem;
     Expression<T, Alloc> exprA(rA);
     return BinaryOp(exprA.mExpressionTree, BinaryOperator::Addition,
-        rB.mExpressionTree);
+                    rB.mExpressionTree);
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -418,7 +516,7 @@ Emblem::Expression<T, Alloc> operator-(
     using namespace Emblem;
     Expression<T, Alloc> exprA(rA);
     return BinaryOp(exprA.mExpressionTree, BinaryOperator::Subtraction,
-        rB.mExpressionTree.clone());
+                    rB.mExpressionTree.clone());
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -430,7 +528,7 @@ Emblem::Expression<T, Alloc> operator-(
     using namespace Emblem;
     Expression<T, Alloc> exprA(rA);
     return BinaryOp(exprA.mExpressionTree, BinaryOperator::Subtraction,
-        rB.mExpressionTree);
+                    rB.mExpressionTree);
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -442,7 +540,7 @@ Emblem::Expression<T, Alloc> operator*(
     using namespace Emblem;
     Expression<T, Alloc> exprA(rA);
     return BinaryOp(exprA.mExpressionTree, BinaryOperator::Multiplication,
-        rB.mExpressionTree.clone());
+                    rB.mExpressionTree.clone());
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -454,7 +552,7 @@ Emblem::Expression<T, Alloc> operator*(
     using namespace Emblem;
     Expression<T, Alloc> exprA(rA);
     return BinaryOp(exprA.mExpressionTree, BinaryOperator::Multiplication,
-        rB.mExpressionTree);
+                    rB.mExpressionTree);
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -466,7 +564,7 @@ Emblem::Expression<T, Alloc> operator/(
     using namespace Emblem;
     Expression<T, Alloc> exprA(rA);
     return BinaryOp(exprA.mExpressionTree, BinaryOperator::Division,
-        rB.mExpressionTree.clone());
+                    rB.mExpressionTree.clone());
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -478,9 +576,8 @@ Emblem::Expression<T, Alloc> operator/(
     using namespace Emblem;
     Expression<T, Alloc> exprA(rA);
     return BinaryOp(exprA.mExpressionTree, BinaryOperator::Division,
-        rB.mExpressionTree);
+                    rB.mExpressionTree);
 }
-
 
 /** \mainpage Emblem
 *

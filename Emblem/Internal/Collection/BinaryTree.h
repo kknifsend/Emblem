@@ -38,11 +38,12 @@ template <class NodeType>
 class Node
 {
 public:
+    NodeType* mpParentNode;
     NodeType* mpLeftNode;
     NodeType* mpRightNode;
 
     Node()
-        : mpLeftNode(nullptr), mpRightNode(nullptr) {}
+        : mpParentNode(nullptr), mpLeftNode(nullptr), mpRightNode(nullptr) {}
 
     virtual ~Node() {}
 
@@ -60,11 +61,13 @@ public:
         if (mpLeftNode != nullptr)
         {
             pClone->mpLeftNode = mpLeftNode->cloneTree();
+            pClone->mpLeftNode->mpParentNode = pClone;
         }
 
         if (mpRightNode != nullptr)
         {
             pClone->mpRightNode = mpRightNode->cloneTree();
+            pClone->mpRightNode->mpParentNode = pClone;
         }
 
         return pClone;
@@ -97,6 +100,33 @@ public:
     const NodeType* insertChildLeft(NodeType* pParentNode, NodeType* pChildNode);
     const NodeType* insertChildRight(NodeType* pParentNode, NodeType* pChildNode);
     const NodeType* insertToHead(NodeType* pNode);
+
+    void replace(NodeType* pNodeToReplace, NodeType* pReplacementNode)
+    {
+        if ((pNodeToReplace == nullptr) || (pReplacementNode == nullptr))
+        {
+            return;
+        }
+
+        if (pNodeToReplace == mpHead)
+        {
+            insertToHead(pReplacementNode);
+            return;
+        }
+
+        NodeType* pParentNode = pNodeToReplace->mpParentNode;
+        if (pParentNode->mpLeftNode == pNodeToReplace)
+        {
+            delete pParentNode->mpLeftNode;
+            pParentNode->mpLeftNode = pReplacementNode;
+        }
+        else
+        {
+            delete pParentNode->mpRightNode;
+            pParentNode->mpRightNode = pReplacementNode;
+        }
+
+    }
 
     void clear();
 
@@ -229,6 +259,7 @@ void BinaryTree<NodeType>::clear()
     {
         pNode->mpLeftNode = nullptr;
         pNode->mpRightNode = nullptr;
+        pNode->mpParentNode = nullptr;
 
         delete pNode;
     }
@@ -261,8 +292,10 @@ const NodeType* BinaryTree<NodeType>::insertChildLeft(
     if (pParentNode->mpLeftNode != nullptr)
     {
         pChildNode->mpLeftNode = pParentNode->mpLeftNode;
+        pChildNode->mpLeftNode->mpParentNode = pChildNode;
     }
     pParentNode->mpLeftNode = pChildNode;
+    pChildNode->mpParentNode = pParentNode;
 
     return pChildNode;
 }
@@ -281,8 +314,10 @@ const NodeType* BinaryTree<NodeType>::insertChildRight(
     if (pParentNode->mpRightNode != nullptr)
     {
         pChildNode->mpRightNode = pParentNode->mpRightNode;
+        pChildNode->mpRightNode->mpParentNode = pChildNode;
     }
     pParentNode->mpRightNode = pChildNode;
+    pChildNode->mpParentNode = pParentNode;
 
     return pChildNode;
 }

@@ -127,6 +127,11 @@ public:
         return new SymbolNode(*this);
     }
 
+    const Symbol<T, Allocator>& GetSymbol() const
+    {
+        return mSymbol;
+    }
+
     virtual bool isOperand() const { return true; }
     virtual bool isSymbol() const { return true; }
 };
