@@ -20,6 +20,13 @@
 #include <string>
 #include <cmath>
 
+namespace Emblem
+{
+namespace Internal
+{
+
+///////////////////////////////////////////////////////////////////////
+
 template <class T>
 class UnaryOperator
 {
@@ -60,6 +67,8 @@ private:
     std::string mCloseString;
 };
 
+///////////////////////////////////////////////////////////////////////
+
 /** Unary Operators */
 template <class T>
 T FuncSin(const T& rA) { return sin(rA); }
@@ -73,6 +82,8 @@ T FuncTan(const T& rA) { return tan(rA); }
 template <class T>
 T FuncIdentity(const T& rA) { return rA; }
 
+///////////////////////////////////////////////////////////////////////
+
 template <class T>
 UnaryOperator<T> UnaryOperator<T>::Sin(FuncSin<T>, "sin(", ")");
 
@@ -84,3 +95,6 @@ UnaryOperator<T> UnaryOperator<T>::Tan(FuncTan<T>, "tan(", ")");
 
 template <class T>
 UnaryOperator<T> UnaryOperator<T>::Identity(FuncIdentity<T>, "", "");
+
+} // namespace Internal
+} // namespace Emblem

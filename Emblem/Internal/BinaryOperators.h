@@ -19,6 +19,13 @@
 
 #include <string>
 
+namespace Emblem
+{
+namespace Internal
+{
+
+///////////////////////////////////////////////////////////////////////
+
 template <class T>
 class BinaryOperator
 {
@@ -56,6 +63,8 @@ private:
     const std::string mString;
 };
 
+///////////////////////////////////////////////////////////////////////
+
 template <class T>
 T FuncAdd(const T& rA, const T& rB) { return (rA + rB); }
 
@@ -68,6 +77,8 @@ T FuncMul(const T& rA, const T& rB) { return (rA * rB); }
 template <class T>
 T FuncDiv(const T& rA, const T& rB) { return (rA / rB); }
 
+///////////////////////////////////////////////////////////////////////
+
 template <class T>
 BinaryOperator<T> BinaryOperator<T>::Addition(FuncAdd<T>, " + ");
 
@@ -79,3 +90,6 @@ BinaryOperator<T> BinaryOperator<T>::Multiplication(FuncMul<T>, " * ");
 
 template <class T>
 BinaryOperator<T> BinaryOperator<T>::Division(FuncDiv<T>, " / ");
+
+} // namespace Internal
+} // namespace Emblem

@@ -18,8 +18,8 @@
 
 #pragma once
 
-#include "Math\BinaryOperators.h"
-#include "Math\UnaryOperators.h"
+#include "BinaryOperators.h"
+#include "UnaryOperators.h"
 
 #include <allocators>
 #include <string>
@@ -30,9 +30,13 @@
 namespace Emblem
 {
 template <class T, class Alloc> class Symbol;
+namespace Internal
+{
+
+/////////////////////////////////////////////////
 
 template <class T, class Allocator>
-class TermNode : public Collection::Node<TermNode<T, Allocator>>
+class TermNode : public Internal::Node<TermNode<T, Allocator>>
 {
 public:
     typedef std::unordered_map<
@@ -40,7 +44,7 @@ public:
         std::equal_to<std::string>, Allocator> ValueMap;
 
     TermNode()
-        : Collection::Node<TermNode<T, Allocator>>()
+        : Internal::Node<TermNode<T, Allocator>>()
     {
 
     }
@@ -52,6 +56,8 @@ public:
     virtual bool isOperator() const { return false; }
     virtual bool isSymbol() const { return false; }
 };
+
+/////////////////////////////////////////////////
 
 template <class T, class Allocator>
 class BinaryOperatorNode : public TermNode<T, Allocator>
@@ -113,6 +119,8 @@ private:
     BinaryOperator<T> mBinaryOperator;
 };
 
+/////////////////////////////////////////////////
+
 template <class T, class Allocator>
 class UnaryOperatorNode : public TermNode<T, Allocator>
 {
@@ -149,6 +157,8 @@ private:
     UnaryOperator<T> mUnaryOperator;
 };
 
+/////////////////////////////////////////////////
+
 template <class T, class Allocator>
 class SymbolNode : public TermNode<T, Allocator>
 {
@@ -181,6 +191,8 @@ public:
     virtual bool isOperand() const { return true; }
     virtual bool isSymbol() const { return true; }
 };
+
+/////////////////////////////////////////////////
 
 template <class T, class Allocator>
 class ConstantNode : public TermNode<T, Allocator>
@@ -227,4 +239,5 @@ private:
     T* mpData;
 };
 
-}
+} // namespace Internal
+} // namespace Emblem

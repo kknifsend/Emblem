@@ -22,12 +22,10 @@
 
 using namespace std;
 
-
 #include <vector>
 #include <iostream>
 
 #include "Emblem/Expression.h"
-#include "Emblem/Symbol.h"
 using namespace Emblem;
 
 class Vector

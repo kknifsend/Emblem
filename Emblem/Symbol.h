@@ -63,8 +63,8 @@ namespace Emblem
 template <class T, class Alloc = std::allocator<T>>
 class Symbol
 {
-    typedef BinaryOperator<T> BinaryOperator;
-    typedef UnaryOperator<T> UnaryOperator;
+    typedef Internal::BinaryOperator<T> BinaryOperator;
+    typedef Internal::UnaryOperator<T> UnaryOperator;
     typedef Expression<T, Alloc> Expression;
 public:
     Symbol(const char* const pStr)
