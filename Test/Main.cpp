@@ -30,6 +30,20 @@ using namespace std;
 #include "Emblem/Symbol.h"
 using namespace Emblem;
 
+class Vector
+{
+public:
+    Vector operator+(const Vector&) const 
+    {
+        return Vector();
+    }
+
+    Vector operator-(const Vector&) const
+    {
+        return Vector();
+    }
+};
+
 double eval(Expression<double>::ValueMap& values)
 {
     double x, y, z;
@@ -43,6 +57,9 @@ double eval(Expression<double>::ValueMap& values)
 
 int main()
 {
+    /*Expression<Vector>::Symbol x2("x"), y2("y");
+    Expression<Vector> test = x2 * y2;*/
+
     Expression<double>::ValueMap values;
     values["x"] = 4.0;
     values["y"] = 3.0;

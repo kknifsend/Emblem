@@ -141,53 +141,113 @@ public:
     Expression derivative(const Symbol&) const {}
 
     // Operators
-    Expression operator+(const Expression& rB) const
+    ///////////////////////////////////////////////////
+    ///////////////// Addition ////////////////////////
+    ///////////////////////////////////////////////////
+    Expression operator+(const Expression& rB) const&
     {
         return BinaryOp(
                    mExpressionTree.clone(), BinaryOperator::Addition,
                    rB.mExpressionTree.clone());
     }
 
-    Expression operator+(Expression&& rB) const
+    Expression operator+(Expression&& rB) const&
     {
         return BinaryOp(mExpressionTree.clone(), BinaryOperator::Addition,
                         rB.mExpressionTree);
     }
 
-    Expression operator-(const Expression& rB) const
+    Expression operator+(const Expression& rB) &&
+    {
+        return BinaryOp(mExpressionTree, BinaryOperator::Addition,
+            rB.mExpressionTree.clone());
+    }
+
+    Expression operator+(Expression&& rB) &&
+    {
+        return BinaryOp(mExpressionTree, BinaryOperator::Addition,
+            rB.mExpressionTree);
+    }
+
+    ///////////////////////////////////////////////////
+    ///////////////// Subtraction /////////////////////
+    ///////////////////////////////////////////////////
+    Expression operator-(const Expression& rB) const&
     {
         return BinaryOp(mExpressionTree.clone(), BinaryOperator::Subtraction,
                         rB.mExpressionTree.clone());
     }
 
-    Expression operator-(Expression&& rB) const
+    Expression operator-(Expression&& rB) const&
     {
         return BinaryOp(mExpressionTree.clone(),BinaryOperator::Subtraction,
                         rB.mExpressionTree);
     }
+    
+    Expression operator-(const Expression& rB) &&
+    {
+        return BinaryOp(mExpressionTree, BinaryOperator::Subtraction,
+            rB.mExpressionTree.clone());
+    }
 
-    Expression operator*(const Expression& rB) const
+    Expression operator-(Expression&& rB) &&
+    {
+        return BinaryOp(mExpressionTree, BinaryOperator::Subtraction,
+            rB.mExpressionTree);
+    }
+
+    ///////////////////////////////////////////////////
+    ///////////////// Multiplication //////////////////
+    ///////////////////////////////////////////////////
+    Expression operator*(const Expression& rB) const&
     {
         return BinaryOp(mExpressionTree.clone(),BinaryOperator::Multiplication,
                         rB.mExpressionTree.clone());
     }
 
-    Expression operator*(Expression&& rB) const
+    Expression operator*(Expression&& rB) const&
     {
         return BinaryOp(mExpressionTree.clone(), BinaryOperator::Multiplication,
                         rB.mExpressionTree);
     }
 
-    Expression operator/(const Expression& rB) const
+    Expression operator*(const Expression& rB) &&
+    {
+        return BinaryOp(mExpressionTree, BinaryOperator::Multiplication,
+            rB.mExpressionTree.clone());
+    }
+
+    Expression operator*(Expression&& rB) &&
+    {
+        return BinaryOp(mExpressionTree, BinaryOperator::Multiplication,
+            rB.mExpressionTree);
+    }
+
+    ///////////////////////////////////////////////////
+    ///////////////// Division ////////////////////////
+    ///////////////////////////////////////////////////
+    Expression operator/(const Expression& rB) const&
     {
         return BinaryOp(mExpressionTree.clone(), BinaryOperator::Division,
                         rB.mExpressionTree.clone());
     }
 
-    Expression operator/(Expression&& rB) const
+    Expression operator/(Expression&& rB) const&
     {
         return BinaryOp(mExpressionTree.clone(), BinaryOperator::Division,
                         rB.mExpressionTree);
+    }
+
+    Expression operator/(const Expression& rB) &&
+    {
+        return BinaryOp(mExpressionTree, BinaryOperator::Division,
+            rB.mExpressionTree.clone());
+    }
+
+    Expression operator/(Expression&& rB) &&
+    {
+        return BinaryOp(mExpressionTree, BinaryOperator::Division,
+            rB.mExpressionTree);
     }
 
     // Assignment math operators
