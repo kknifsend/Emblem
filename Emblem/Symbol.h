@@ -37,6 +37,17 @@ template <class T, class Alloc>
 Emblem::Expression<T, Alloc> tan(const Emblem::Symbol<T, Alloc>& rA);
 
 template <class T, class Alloc>
+Emblem::Expression<T, Alloc> abs(const Emblem::Symbol<T, Alloc>& rA);
+template <class T, class Alloc>
+Emblem::Expression<T, Alloc> exp(const Emblem::Symbol<T, Alloc>& rA);
+template <class T, class Alloc>
+Emblem::Expression<T, Alloc> log(const Emblem::Symbol<T, Alloc>& rA);
+template <class T, class Alloc>
+Emblem::Expression<T, Alloc> log10(const Emblem::Symbol<T, Alloc>& rA);
+template <class T, class Alloc>
+Emblem::Expression<T, Alloc> sqrt(const Emblem::Symbol<T, Alloc>& rA);
+
+template <class T, class Alloc>
 Emblem::Expression<T, Alloc> operator+(
     const T& rA, const Emblem::Symbol<T, Alloc>& rB);
 template <class T, class Alloc>
@@ -141,6 +152,11 @@ public:
                                     rB.mExpressionTree);
     }
 
+    Expression operator-() const
+    {
+        Expression exprA(*this);
+        return Expression::UnaryOp(exprA.mExpressionTree, UnaryOperator::Negate);
+    }
 
 private:
     friend std::ostream& (::operator<<)(std::ostream& rOut, const Symbol<T, Alloc>&);
@@ -148,6 +164,12 @@ private:
     friend Emblem::Expression<T, Alloc> (::sin)(const Emblem::Symbol<T, Alloc>& rA);
     friend Emblem::Expression<T, Alloc> (::cos)(const Emblem::Symbol<T, Alloc>& rA);
     friend Emblem::Expression<T, Alloc> (::tan)(const Emblem::Symbol<T, Alloc>& rA);
+    friend Emblem::Expression<T, Alloc>(::abs)(const Emblem::Symbol<T, Alloc>& rA);
+    friend Emblem::Expression<T, Alloc>(::exp)(const Emblem::Symbol<T, Alloc>& rA);
+    friend Emblem::Expression<T, Alloc>(::log)(const Emblem::Symbol<T, Alloc>& rA);
+    friend Emblem::Expression<T, Alloc>(::log10)(const Emblem::Symbol<T, Alloc>& rA);
+    friend Emblem::Expression<T, Alloc>(::sqrt)(const Emblem::Symbol<T, Alloc>& rA);
+
     friend Emblem::Expression<T, Alloc> (::operator+)(const T& rA, const Emblem::Symbol<T, Alloc>& rB);
     friend Emblem::Expression<T, Alloc> (::operator-)(const T& rA, const Emblem::Symbol<T, Alloc>& rB);
     friend Emblem::Expression<T, Alloc> (::operator*)(const T& rA, const Emblem::Symbol<T, Alloc>& rB);
@@ -188,6 +210,55 @@ Emblem::Expression<T, Alloc> tan(const Emblem::Symbol<T, Alloc>& rA)
                exprA.mExpressionTree, UnaryOperatorNode<T, Alloc>::Tan);
 }
 
+///////////////////////////////////////////////////////////////////////
+
+template <class T, class Alloc>
+Emblem::Expression<T, Alloc> abs(const Emblem::Symbol<T, Alloc>& rA)
+{
+    Emblem::Expression<T, Alloc> exprA(rA);
+    return Emblem::Expression<T, Alloc>::UnaryOp(
+               exprA.mExpressionTree, UnaryOperatorNode<T, Alloc>::Abs);
+}
+
+///////////////////////////////////////////////////////////////////////
+
+template <class T, class Alloc>
+Emblem::Expression<T, Alloc> exp(const Emblem::Symbol<T, Alloc>& rA)
+{
+    Emblem::Expression<T, Alloc> exprA(rA);
+    return Emblem::Expression<T, Alloc>::UnaryOp(
+               exprA.mExpressionTree, UnaryOperatorNode<T, Alloc>::Exp);
+}
+
+///////////////////////////////////////////////////////////////////////
+
+template <class T, class Alloc>
+Emblem::Expression<T, Alloc> log(const Emblem::Symbol<T, Alloc>& rA)
+{
+    Emblem::Expression<T, Alloc> exprA(rA);
+    return Emblem::Expression<T, Alloc>::UnaryOp(
+               exprA.mExpressionTree, UnaryOperatorNode<T, Alloc>::Ln);
+}
+
+///////////////////////////////////////////////////////////////////////
+
+template <class T, class Alloc>
+Emblem::Expression<T, Alloc> log10(const Emblem::Symbol<T, Alloc>& rA)
+{
+    Emblem::Expression<T, Alloc> exprA(rA);
+    return Emblem::Expression<T, Alloc>::UnaryOp(
+               exprA.mExpressionTree, UnaryOperatorNode<T, Alloc>::Log10);
+}
+
+///////////////////////////////////////////////////////////////////////
+
+template <class T, class Alloc>
+Emblem::Expression<T, Alloc> sqrt(const Emblem::Symbol<T, Alloc>& rA)
+{
+    Emblem::Expression<T, Alloc> exprA(rA);
+    return Emblem::Expression<T, Alloc>::UnaryOp(
+               exprA.mExpressionTree, UnaryOperatorNode<T, Alloc>::Sqrt);
+}
 
 ///////////////////////////////////////////////////////////////////////
 

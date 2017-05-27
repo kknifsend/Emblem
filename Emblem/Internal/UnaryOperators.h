@@ -60,6 +60,12 @@ public:
     static UnaryOperator Cos;
     static UnaryOperator Tan;
     static UnaryOperator Identity;
+    static UnaryOperator Abs;
+    static UnaryOperator Negate;
+    static UnaryOperator Exp;
+    static UnaryOperator Ln;
+    static UnaryOperator Log10;
+    static UnaryOperator Sqrt;
 
 private:
     const Operator mOperator;
@@ -82,6 +88,24 @@ T FuncTan(const T& rA) { return tan(rA); }
 template <class T>
 T FuncIdentity(const T& rA) { return rA; }
 
+template <class T>
+T FuncAbs(const T& rA) { return std::abs(rA); }
+
+template <class T>
+T FuncNegate(const T& rA) { return -rA; }
+
+template <class T>
+T FuncExp(const T& rA) { return exp(rA); }
+
+template <class T>
+T FuncLn(const T& rA) { return log(rA); }
+
+template <class T>
+T FuncLog10(const T& rA) { return log10(rA); }
+
+template <class T>
+T FuncSqrt(const T& rA) { return sqrt(rA); }
+
 ///////////////////////////////////////////////////////////////////////
 
 template <class T>
@@ -95,6 +119,24 @@ UnaryOperator<T> UnaryOperator<T>::Tan(FuncTan<T>, "tan(", ")");
 
 template <class T>
 UnaryOperator<T> UnaryOperator<T>::Identity(FuncIdentity<T>, "", "");
+
+template <class T>
+UnaryOperator<T> UnaryOperator<T>::Abs(FuncAbs<T>, "|", "|");
+
+template <class T>
+UnaryOperator<T> UnaryOperator<T>::Negate(FuncNegate<T>, "-", "");
+
+template <class T>
+UnaryOperator<T> UnaryOperator<T>::Exp(FuncExp<T>, "e^(", ")");
+
+template <class T>
+UnaryOperator<T> UnaryOperator<T>::Ln(FuncLn<T>, "ln(", ")");
+
+template <class T>
+UnaryOperator<T> UnaryOperator<T>::Log10(FuncExp<T>, "log10(", ")");
+
+template <class T>
+UnaryOperator<T> UnaryOperator<T>::Sqrt(FuncSqrt<T>, "(", ")^(1/2)");
 
 } // namespace Internal
 } // namespace Emblem
