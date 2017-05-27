@@ -25,6 +25,7 @@
 #include <string>
 #include <unordered_map>
 #include <cassert>
+#include <iostream>
 
 namespace Emblem
 {
@@ -45,6 +46,7 @@ public:
     }
 
     virtual T evaluate(const ValueMap& rValueMap) const = 0;
+    virtual void Output(bool withParens, std::ostream& rOut) const = 0;
 
     virtual bool isOperand() const { return false; }
     virtual bool isOperator() const { return false; }
@@ -67,6 +69,38 @@ public:
         const T rightVal = ((TermNode*)mpRightNode)->evaluate(rValueMap);
 
         return mBinaryOperator(leftVal, rightVal);
+    }
+
+    void Output(bool withParens, std::ostream& rOut) const override
+    {
+        if (withParens)
+        {
+            rOut << '(';
+        }
+
+        // Output left node
+        const BinaryOperatorNode* pLeftOperation =
+            dynamic_cast<BinaryOperatorNode*>(mpLeftNode);
+        const bool isLeftOpEqual =
+            (pLeftOperation != nullptr) &&
+            (mBinaryOperator == pLeftOperation->mBinaryOperator);
+        mpLeftNode->Output(!isLeftOpEqual, rOut);
+
+        // Output operator
+        rOut << mBinaryOperator.GetOperatorString();
+
+        // Output right node
+        const BinaryOperatorNode* pRightOperation =
+            dynamic_cast<BinaryOperatorNode*>(mpLeftNode);
+        const bool isRightOpEqual =
+            (pRightOperation != nullptr) &&
+            (mBinaryOperator == pRightOperation->mBinaryOperator);
+        mpRightNode->Output(!isRightOpEqual, rOut);
+
+        if (withParens)
+        {
+            rOut << ')';
+        }
     }
 
     virtual TermNode* clone() override
@@ -98,6 +132,13 @@ public:
         return mUnaryOperator(val);
     }
 
+    void Output(bool withParens, std::ostream& rOut) const override
+    {
+        rOut << mUnaryOperator.GetOpenString();
+        mpLeftNode->Output(false, rOut);
+        rOut << mUnaryOperator.GetCloseString();
+    }
+
     virtual TermNode* clone() override
     {
         return new UnaryOperatorNode(*this);
@@ -120,6 +161,11 @@ public:
     T evaluate(const ValueMap& rValueMap) const override
     {
         return rValueMap.at(mSymbol.toString());
+    }
+
+    void Output(bool withParens, std::ostream& rOut) const override
+    {
+        rOut << mSymbol;
     }
 
     virtual TermNode* clone() override
@@ -155,6 +201,11 @@ public:
     T evaluate(const ValueMap& rValueMap) const override
     {
         return *mpData;
+    }
+
+    void Output(bool withParens, std::ostream& rOut) const override
+    {
+        rOut << *mpData;
     }
 
     virtual TermNode* clone() override

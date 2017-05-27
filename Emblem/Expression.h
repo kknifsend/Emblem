@@ -418,7 +418,7 @@ void Expression<T, Alloc>::Output(std::ostream& rOut) const
         return;
     }
 
-
+    pHead->Output(false, rOut);
 }
 
 } // namespace Emblem
@@ -578,6 +578,17 @@ Emblem::Expression<T, Alloc> operator/(
     return BinaryOp(exprA.mExpressionTree, BinaryOperator::Division,
                     rB.mExpressionTree);
 }
+
+///////////////////////////////////////////////////////////////////////
+
+template <class T, class Alloc>
+std::ostream& operator<<(
+    std::ostream& rOut, const Emblem::Expression<T, Alloc>& rExpr)
+{
+    rExpr.Output(rOut);
+    return rOut;
+}
+
 
 /** \mainpage Emblem
 *

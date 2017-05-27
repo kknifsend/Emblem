@@ -39,6 +39,16 @@ public:
         return mOperator(rValue);
     }
 
+    const std::string& GetOpenString() const
+    {
+        return mOpenString;
+    }
+
+    const std::string& GetCloseString() const
+    {
+        return mCloseString;
+    }
+
     static UnaryOperator Sin;
     static UnaryOperator Cos;
     static UnaryOperator Tan;

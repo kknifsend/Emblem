@@ -36,6 +36,16 @@ public:
         return mOperator(rValue0, rValue1);
     }
 
+    const std::string& GetOperatorString() const
+    {
+        return mString;
+    }
+
+    bool operator==(const BinaryOperator& rOther) const
+    {
+        return mOperator == rOther.mOperator;
+    }
+
     static BinaryOperator Addition;
     static BinaryOperator Subtraction;
     static BinaryOperator Multiplication;

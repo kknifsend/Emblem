@@ -26,7 +26,7 @@
 ///////////////////////////////////////////////////////////////////////
 namespace Emblem
 {
-    template <class T, class Alloc> class Symbol;
+template <class T, class Alloc> class Symbol;
 }
 
 template <class T, class Alloc>
@@ -48,6 +48,9 @@ Emblem::Expression<T, Alloc> operator*(
 template <class T, class Alloc>
 Emblem::Expression<T, Alloc> operator/(
     const T& rA, const Emblem::Symbol<T, Alloc>& rB);
+
+template <class T, class Alloc>
+std::ostream& operator<<(std::ostream& rOut, const Emblem::Symbol<T, Alloc>&);
 
 /** \namespace Emblem */
 namespace Emblem
@@ -81,67 +84,66 @@ public:
     {
         return mString;
     }
-    
+
     Expression operator+(const Expression& rB)
     {
         Expression exprA(*this);
         return BinaryOp(exprA.mExpressionTree, BinaryOperator::Addition,
-            rB.mExpressionTree.clone());
+                        rB.mExpressionTree.clone());
     }
 
     Expression operator-(const Expression& rB)
     {
         Expression exprA(*this);
         return BinaryOp(exprA.mExpressionTree, BinaryOperator::Subtraction,
-            rB.mExpressionTree.clone());
+                        rB.mExpressionTree.clone());
     }
 
     Expression operator*(const Expression& rB)
     {
         Expression exprA(*this);
         return BinaryOp(exprA.mExpressionTree, BinaryOperator::Multiplication,
-            rB.mExpressionTree.clone());
+                        rB.mExpressionTree.clone());
     }
 
     Expression operator/(const Expression& rB)
     {
         Expression exprA(*this);
         return BinaryOp(exprA.mExpressionTree, BinaryOperator::Division,
-            rB.mExpressionTree.clone());
+                        rB.mExpressionTree.clone());
     }
 
     Expression operator+(Expression&& rB)
     {
         Expression exprA(*this);
         return Expression::BinaryOp(exprA.mExpressionTree, BinaryOperator::Addition,
-            rB.mExpressionTree);
+                                    rB.mExpressionTree);
     }
 
     Expression operator-(Expression&& rB)
     {
         Expression exprA(*this);
         return Expression::BinaryOp(exprA.mExpressionTree, BinaryOperator::Subtraction,
-            rB.mExpressionTree);
+                                    rB.mExpressionTree);
     }
 
     Expression operator*(Expression&& rB)
     {
         Expression exprA(*this);
         return Expression::BinaryOp(exprA.mExpressionTree, BinaryOperator::Multiplication,
-            rB.mExpressionTree);
+                                    rB.mExpressionTree);
     }
 
     Expression operator/(Expression&& rB)
     {
         Expression exprA(*this);
         return Expression::BinaryOp(exprA.mExpressionTree, BinaryOperator::Division,
-            rB.mExpressionTree);
+                                    rB.mExpressionTree);
     }
 
 
 private:
-    template <class T>
-    friend std::ostream& (::operator<<)(std::ostream& rOut, const Symbol<T>&);
+    friend std::ostream& (::operator<<)(std::ostream& rOut, const Symbol<T, Alloc>&);
 
     friend Emblem::Expression<T, Alloc> (::sin)(const Emblem::Symbol<T, Alloc>& rA);
     friend Emblem::Expression<T, Alloc> (::cos)(const Emblem::Symbol<T, Alloc>& rA);
@@ -163,7 +165,7 @@ Emblem::Expression<T, Alloc> sin(const Emblem::Symbol<T, Alloc>& rA)
 {
     Emblem::Expression<T, Alloc> exprA(rA);
     return Emblem::Expression<T, Alloc>::UnaryOp(
-        exprA.mExpressionTree, UnaryOperatorNode<T, Alloc>::Sin);
+               exprA.mExpressionTree, UnaryOperatorNode<T, Alloc>::Sin);
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -173,7 +175,7 @@ Emblem::Expression<T, Alloc> cos(const Emblem::Symbol<T, Alloc>& rA)
 {
     Emblem::Expression<T, Alloc> exprA(rA);
     return Emblem::Expression<T, Alloc>::UnaryOp(
-        exprA.mExpressionTree, UnaryOperatorNode<T, Alloc>::Cos);
+               exprA.mExpressionTree, UnaryOperatorNode<T, Alloc>::Cos);
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -183,7 +185,7 @@ Emblem::Expression<T, Alloc> tan(const Emblem::Symbol<T, Alloc>& rA)
 {
     Emblem::Expression<T, Alloc> exprA(rA);
     return Emblem::Expression<T, Alloc>::UnaryOp(
-        exprA.mExpressionTree, UnaryOperatorNode<T, Alloc>::Tan);
+               exprA.mExpressionTree, UnaryOperatorNode<T, Alloc>::Tan);
 }
 
 
@@ -196,7 +198,7 @@ Emblem::Expression<T, Alloc> operator+(
     Emblem::Expression<T, Alloc> exprA(rA);
     Emblem::Expression<T, Alloc> exprB(rB);
     return BinaryOp(exprA.mExpressionTree, BinaryOperator::Addition,
-        exprB.mExpressionTree);
+                    exprB.mExpressionTree);
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -208,7 +210,7 @@ Emblem::Expression<T, Alloc> operator-(
     Emblem::Expression<T, Alloc> exprA(rA);
     Emblem::Expression<T, Alloc> exprB(rB);
     return BinaryOp(exprA.mExpressionTree, BinaryOperator::Subtraction,
-        exprB.mExpressionTree);
+                    exprB.mExpressionTree);
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -220,7 +222,7 @@ Emblem::Expression<T, Alloc> operator*(
     Emblem::Expression<T, Alloc> exprA(rA);
     Emblem::Expression<T, Alloc> exprB(rB);
     return BinaryOp(exprA.mExpressionTree, BinaryOperator::Multiplication,
-        exprB.mExpressionTree);
+                    exprB.mExpressionTree);
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -232,14 +234,15 @@ Emblem::Expression<T, Alloc> operator/(
     Emblem::Expression<T, Alloc> exprA(rA);
     Emblem::Expression<T, Alloc> exprB(rB);
     return BinaryOp(exprA.mExpressionTree, BinaryOperator::Division,
-        exprB.mExpressionTree);
+                    exprB.mExpressionTree);
 }
 
 
 ///////////////////////////////////////////////////////////////////////
 
-template <class T>
-std::ostream& operator<<(std::ostream& rOut, const Emblem::Symbol<T>& rSymbol)
+template <class T, class Alloc>
+std::ostream& operator<<(
+    std::ostream& rOut, const Emblem::Symbol<T, Alloc>& rSymbol)
 {
     rOut << rSymbol.mString;
     return rOut;

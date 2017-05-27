@@ -33,7 +33,7 @@ using namespace Emblem;
 class Vector
 {
 public:
-    Vector operator+(const Vector&) const 
+    Vector operator+(const Vector&) const
     {
         return Vector();
     }
@@ -77,6 +77,8 @@ int main()
     const double trueResult = eval(values);
     std::cout << "Result = " << result << '\n';
     std::cout << "TruResult = " << trueResult << '\n';
+
+    std::cout << "Expression: " << expr << '\n';
 
     std::cout << "\nProgram finished..\n";
     cin.get();
