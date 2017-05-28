@@ -58,12 +58,13 @@ int main()
     /*Expression<Vector>::Symbol x2("x"), y2("y");
     Expression<Vector> test = x2 * y2;*/
 
-    Expression<double>::ValueMap values;
-    values["x"] = 4.0;
-    values["y"] = 3.0;
-    values["z"] = 2.0;
-
     Expression<double>::Symbol x("x"), y("y"), z("z");
+
+    Expression<double>::ValueMap values;
+    values[x] = 4.0;
+    values[y] = 3.0;
+    values[z] = 2.0;
+
     //Expression<double> expr0 = x;
     //Expression<double> expr1 = 5.0 + x;
     Expression<double> expr = sin(((x * y) + (z - x) / 5.0) + z);

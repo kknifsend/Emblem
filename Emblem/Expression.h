@@ -170,6 +170,8 @@ public:
         Expression::Substitute(*this, rSymbol, rExpr.mExpressionTree);
     }
 
+    void simplify();
+
     /** */
     Expression derivative(const Symbol&) const {}
 
@@ -385,6 +387,14 @@ private:
 
     ExpressionTree mExpressionTree;
 };
+
+///////////////////////////////////////////////////////////////////////
+
+template <class T, class Alloc>
+void Expression<T, Alloc>::simplify()
+{
+
+}
 
 ///////////////////////////////////////////////////////////////////////
 

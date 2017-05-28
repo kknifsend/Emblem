@@ -22,6 +22,8 @@
 
 #include <string>
 #include <iostream>
+#include <cstdint>
+#include <functional>
 
 ///////////////////////////////////////////////////////////////////////
 namespace Emblem
@@ -95,6 +97,12 @@ public:
     {
         return mString;
     }
+
+    operator const std::string& () const
+    {
+        return mString;
+    }
+
 
     Expression operator+(const Expression& rB)
     {
@@ -308,7 +316,6 @@ Emblem::Expression<T, Alloc> operator/(
                     exprB.mExpressionTree);
 }
 
-
 ///////////////////////////////////////////////////////////////////////
 
 template <class T, class Alloc>
@@ -318,3 +325,5 @@ std::ostream& operator<<(
     rOut << rSymbol.mString;
     return rOut;
 }
+
+///////////////////////////////////////////////////////////////////////
