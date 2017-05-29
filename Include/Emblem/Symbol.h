@@ -108,28 +108,28 @@ public:
     {
         Expression exprA(*this);
         return Expression::BinaryOp(exprA.mExpressionTree, BinaryOperator::Addition,
-                        rB.mExpressionTree.clone());
+                                    rB.mExpressionTree.clone());
     }
 
     Expression operator-(const Expression& rB) const
     {
         Expression exprA(*this);
         return Expression::BinaryOp(exprA.mExpressionTree, BinaryOperator::Subtraction,
-                        rB.mExpressionTree.clone());
+                                    rB.mExpressionTree.clone());
     }
 
     Expression operator*(const Expression& rB) const
     {
         Expression exprA(*this);
         return Expression::BinaryOp(exprA.mExpressionTree, BinaryOperator::Multiplication,
-                        rB.mExpressionTree.clone());
+                                    rB.mExpressionTree.clone());
     }
 
     Expression operator/(const Expression& rB) const
     {
         Expression exprA(*this);
         return Expression::BinaryOp(exprA.mExpressionTree, BinaryOperator::Division,
-                        rB.mExpressionTree.clone());
+                                    rB.mExpressionTree.clone());
     }
 
     Expression operator+(Expression&& rB)
@@ -290,10 +290,12 @@ template <class T, class Alloc>
 Emblem::Expression<T, Alloc> operator+(
     const T& rA, const Emblem::Symbol<T, Alloc>& rB)
 {
-    Emblem::Expression<T, Alloc> exprA(rA);
-    Emblem::Expression<T, Alloc> exprB(rB);
-    return BinaryOp(exprA.mExpressionTree, BinaryOperator::Addition,
-                    exprB.mExpressionTree);
+    using namespace Emblem;
+    using namespace Emblem::Internal;
+    Expression<T, Alloc> exprA(rA);
+    Expression<T, Alloc> exprB(rB);
+    return Expression<T, Alloc>::BinaryOp(exprA.mExpressionTree, BinaryOperator<T>::Addition,
+                                          exprB.mExpressionTree);
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -302,10 +304,12 @@ template <class T, class Alloc>
 Emblem::Expression<T, Alloc> operator-(
     const T& rA, const Emblem::Symbol<T, Alloc>& rB)
 {
-    Emblem::Expression<T, Alloc> exprA(rA);
-    Emblem::Expression<T, Alloc> exprB(rB);
-    return BinaryOp(exprA.mExpressionTree, BinaryOperator::Subtraction,
-                    exprB.mExpressionTree);
+    using namespace Emblem;
+    using namespace Emblem::Internal;
+    Expression<T, Alloc> exprA(rA);
+    Expression<T, Alloc> exprB(rB);
+    return Expression<T, Alloc>::BinaryOp(exprA.mExpressionTree, BinaryOperator<T>::Subtraction,
+                                          exprB.mExpressionTree);
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -314,10 +318,12 @@ template <class T, class Alloc>
 Emblem::Expression<T, Alloc> operator*(
     const T& rA, const Emblem::Symbol<T, Alloc>& rB)
 {
-    Emblem::Expression<T, Alloc> exprA(rA);
-    Emblem::Expression<T, Alloc> exprB(rB);
-    return BinaryOp(exprA.mExpressionTree, BinaryOperator::Multiplication,
-                    exprB.mExpressionTree);
+    using namespace Emblem;
+    using namespace Emblem::Internal;
+    Expression<T, Alloc> exprA(rA);
+    Expression<T, Alloc> exprB(rB);
+    return Expression<T, Alloc>::BinaryOp(exprA.mExpressionTree, BinaryOperator<T>::Multiplication,
+                                          exprB.mExpressionTree);
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -326,10 +332,12 @@ template <class T, class Alloc>
 Emblem::Expression<T, Alloc> operator/(
     const T& rA, const Emblem::Symbol<T, Alloc>& rB)
 {
-    Emblem::Expression<T, Alloc> exprA(rA);
-    Emblem::Expression<T, Alloc> exprB(rB);
-    return BinaryOp(exprA.mExpressionTree, BinaryOperator::Division,
-                    exprB.mExpressionTree);
+    using namespace Emblem;
+    using namespace Emblem::Internal;
+    Expression<T, Alloc> exprA(rA);
+    Expression<T, Alloc> exprB(rB);
+    return Expression<T, Alloc>::BinaryOp(exprA.mExpressionTree, BinaryOperator<T>::Division,
+                                          exprB.mExpressionTree);
 }
 
 ///////////////////////////////////////////////////////////////////////

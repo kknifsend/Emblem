@@ -192,12 +192,12 @@ public:
     */
     void substitute(const Symbol& rSymbol, const Expression& rExpr)
     {
-        Expression::Substitute(*this, rSymbol, rExpr.mExpressionTree.clone());
+        Expression::Substitute(mExpressionTree, rSymbol, rExpr.mExpressionTree.clone());
     }
 
     void substitute(const Symbol& rSymbol, Expression&& rExpr)
     {
-        Expression::Substitute(*this, rSymbol, rExpr.mExpressionTree);
+        Expression::Substitute(mExpressionTree, rSymbol, rExpr.mExpressionTree);
     }
 
     void simplify();

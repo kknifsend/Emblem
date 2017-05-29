@@ -179,6 +179,23 @@ TEST(UnaryOperatorTest, Complicated)
     ASSERT_NEAR(exprResult, actualResult, gDoubleTol);
 }
 
+TEST(GeneralTest, Substitution)
+{
+    const double valX = 5.0;
+    const double valY = 100.0;
+
+    const Expression<double>::Symbol x("x"), y("y");
+    const Expression<double>::ValueMap values = { { x, valX },{ y, valY} };
+    const Expression<double> expr0 = 1.0 + x;
+    Expression<double> expression = y * y + 10.0;
+    expression.substitute(y, expr0);
+
+    const double exprResult = expression.evaluate(values);
+    const double actualResult = (1.0 + valX) * (1.0 + valX) + 10.0;
+    ASSERT_NEAR(exprResult, actualResult, gDoubleTol);
+
+}
+
 
 int main(int argc, char** argv)
 {
