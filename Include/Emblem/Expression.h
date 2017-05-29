@@ -463,7 +463,7 @@ void Expression<T, Alloc>::Substitute(
     }
 
     std::stack<const TermNode*> nodeStack;
-    nodesToChildCheck.push(rExpr.head());
+    nodeStack.push(rExpr.head());
     while (!nodeStack.empty())
     {
         const TermNode* pCurNode = nodeStack.top();
@@ -497,7 +497,7 @@ void Expression<T, Alloc>::Substitute(
             if (pRightSymbol->GetSymbol() == rSymbol)
             {
                 ExpressionTree exprSub = rSubExpr.clone();
-                rExpr.replace(pCurNode->pRightSymbol, exprSub.release());
+                rExpr.replace(pCurNode->mpRightNode, exprSub.release());
             }
         }
         else
