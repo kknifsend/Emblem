@@ -104,31 +104,31 @@ public:
     }
 
 
-    Expression operator+(const Expression& rB)
+    Expression operator+(const Expression& rB) const
     {
         Expression exprA(*this);
-        return BinaryOp(exprA.mExpressionTree, BinaryOperator::Addition,
+        return Expression::BinaryOp(exprA.mExpressionTree, BinaryOperator::Addition,
                         rB.mExpressionTree.clone());
     }
 
-    Expression operator-(const Expression& rB)
+    Expression operator-(const Expression& rB) const
     {
         Expression exprA(*this);
-        return BinaryOp(exprA.mExpressionTree, BinaryOperator::Subtraction,
+        return Expression::BinaryOp(exprA.mExpressionTree, BinaryOperator::Subtraction,
                         rB.mExpressionTree.clone());
     }
 
-    Expression operator*(const Expression& rB)
+    Expression operator*(const Expression& rB) const
     {
         Expression exprA(*this);
-        return BinaryOp(exprA.mExpressionTree, BinaryOperator::Multiplication,
+        return Expression::BinaryOp(exprA.mExpressionTree, BinaryOperator::Multiplication,
                         rB.mExpressionTree.clone());
     }
 
-    Expression operator/(const Expression& rB)
+    Expression operator/(const Expression& rB) const
     {
         Expression exprA(*this);
-        return BinaryOp(exprA.mExpressionTree, BinaryOperator::Division,
+        return Expression::BinaryOp(exprA.mExpressionTree, BinaryOperator::Division,
                         rB.mExpressionTree.clone());
     }
 
@@ -193,9 +193,11 @@ private:
 template <class T, class Alloc>
 Emblem::Expression<T, Alloc> sin(const Emblem::Symbol<T, Alloc>& rA)
 {
-    Emblem::Expression<T, Alloc> exprA(rA);
-    return Emblem::Expression<T, Alloc>::UnaryOp(
-               exprA.mExpressionTree, UnaryOperatorNode<T, Alloc>::Sin);
+    using namespace Emblem;
+    using namespace Emblem::Internal;
+    Expression<T, Alloc> exprA(rA);
+    return Expression<T, Alloc>::UnaryOp(
+               exprA.mExpressionTree, UnaryOperator<T>::Sin);
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -203,9 +205,11 @@ Emblem::Expression<T, Alloc> sin(const Emblem::Symbol<T, Alloc>& rA)
 template <class T, class Alloc>
 Emblem::Expression<T, Alloc> cos(const Emblem::Symbol<T, Alloc>& rA)
 {
-    Emblem::Expression<T, Alloc> exprA(rA);
-    return Emblem::Expression<T, Alloc>::UnaryOp(
-               exprA.mExpressionTree, UnaryOperatorNode<T, Alloc>::Cos);
+    using namespace Emblem;
+    using namespace Emblem::Internal;
+    Expression<T, Alloc> exprA(rA);
+    return Expression<T, Alloc>::UnaryOp(
+               exprA.mExpressionTree, UnaryOperator<T>::Cos);
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -213,9 +217,11 @@ Emblem::Expression<T, Alloc> cos(const Emblem::Symbol<T, Alloc>& rA)
 template <class T, class Alloc>
 Emblem::Expression<T, Alloc> tan(const Emblem::Symbol<T, Alloc>& rA)
 {
-    Emblem::Expression<T, Alloc> exprA(rA);
-    return Emblem::Expression<T, Alloc>::UnaryOp(
-               exprA.mExpressionTree, UnaryOperatorNode<T, Alloc>::Tan);
+    using namespace Emblem;
+    using namespace Emblem::Internal;
+    Expression<T, Alloc> exprA(rA);
+    return Expression<T, Alloc>::UnaryOp(
+               exprA.mExpressionTree, UnaryOperator<T>::Tan);
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -223,9 +229,11 @@ Emblem::Expression<T, Alloc> tan(const Emblem::Symbol<T, Alloc>& rA)
 template <class T, class Alloc>
 Emblem::Expression<T, Alloc> abs(const Emblem::Symbol<T, Alloc>& rA)
 {
-    Emblem::Expression<T, Alloc> exprA(rA);
-    return Emblem::Expression<T, Alloc>::UnaryOp(
-               exprA.mExpressionTree, UnaryOperatorNode<T, Alloc>::Abs);
+    using namespace Emblem;
+    using namespace Emblem::Internal;
+    Expression<T, Alloc> exprA(rA);
+    return Expression<T, Alloc>::UnaryOp(
+               exprA.mExpressionTree, UnaryOperator<T>::Abs);
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -233,9 +241,11 @@ Emblem::Expression<T, Alloc> abs(const Emblem::Symbol<T, Alloc>& rA)
 template <class T, class Alloc>
 Emblem::Expression<T, Alloc> exp(const Emblem::Symbol<T, Alloc>& rA)
 {
-    Emblem::Expression<T, Alloc> exprA(rA);
-    return Emblem::Expression<T, Alloc>::UnaryOp(
-               exprA.mExpressionTree, UnaryOperatorNode<T, Alloc>::Exp);
+    using namespace Emblem;
+    using namespace Emblem::Internal;
+    Expression<T, Alloc> exprA(rA);
+    return Expression<T, Alloc>::UnaryOp(
+               exprA.mExpressionTree, UnaryOperator<T>::Exp);
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -243,9 +253,11 @@ Emblem::Expression<T, Alloc> exp(const Emblem::Symbol<T, Alloc>& rA)
 template <class T, class Alloc>
 Emblem::Expression<T, Alloc> log(const Emblem::Symbol<T, Alloc>& rA)
 {
-    Emblem::Expression<T, Alloc> exprA(rA);
-    return Emblem::Expression<T, Alloc>::UnaryOp(
-               exprA.mExpressionTree, UnaryOperatorNode<T, Alloc>::Ln);
+    using namespace Emblem;
+    using namespace Emblem::Internal;
+    Expression<T, Alloc> exprA(rA);
+    return Expression<T, Alloc>::UnaryOp(
+               exprA.mExpressionTree, UnaryOperator<T>::Ln);
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -253,9 +265,11 @@ Emblem::Expression<T, Alloc> log(const Emblem::Symbol<T, Alloc>& rA)
 template <class T, class Alloc>
 Emblem::Expression<T, Alloc> log10(const Emblem::Symbol<T, Alloc>& rA)
 {
-    Emblem::Expression<T, Alloc> exprA(rA);
-    return Emblem::Expression<T, Alloc>::UnaryOp(
-               exprA.mExpressionTree, UnaryOperatorNode<T, Alloc>::Log10);
+    using namespace Emblem;
+    using namespace Emblem::Internal;
+    Expression<T, Alloc> exprA(rA);
+    return Expression<T, Alloc>::UnaryOp(
+               exprA.mExpressionTree, UnaryOperator<T>::Log10);
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -263,9 +277,11 @@ Emblem::Expression<T, Alloc> log10(const Emblem::Symbol<T, Alloc>& rA)
 template <class T, class Alloc>
 Emblem::Expression<T, Alloc> sqrt(const Emblem::Symbol<T, Alloc>& rA)
 {
-    Emblem::Expression<T, Alloc> exprA(rA);
-    return Emblem::Expression<T, Alloc>::UnaryOp(
-               exprA.mExpressionTree, UnaryOperatorNode<T, Alloc>::Sqrt);
+    using namespace Emblem;
+    using namespace Emblem::Internal;
+    Expression<T, Alloc> exprA(rA);
+    return Expression<T, Alloc>::UnaryOp(
+               exprA.mExpressionTree, UnaryOperator<T>::Sqrt);
 }
 
 ///////////////////////////////////////////////////////////////////////

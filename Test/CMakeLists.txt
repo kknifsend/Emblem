@@ -1,7 +1,7 @@
 cmake_minimum_required (VERSION 3.3.2)
 
 set(${ProjectName}_Development ON CACHE BOOL ON)
-set(${ProjectName}_UnitTests ON CACHE BOOL ON)
+set(${ProjectName}_UnitTests OFF CACHE BOOL OFF)
 
 if(${ProjectName}_Development)
     add_executable(Development Main.cpp)
