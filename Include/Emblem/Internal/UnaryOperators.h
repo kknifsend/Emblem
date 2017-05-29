@@ -133,7 +133,7 @@ template <class T>
 UnaryOperator<T> UnaryOperator<T>::Ln(FuncLn<T>, "ln(", ")");
 
 template <class T>
-UnaryOperator<T> UnaryOperator<T>::Log10(FuncExp<T>, "log10(", ")");
+UnaryOperator<T> UnaryOperator<T>::Log10(FuncLog10<T>, "log10(", ")");
 
 template <class T>
 UnaryOperator<T> UnaryOperator<T>::Sqrt(FuncSqrt<T>, "(", ")^(1/2)");

@@ -71,6 +71,23 @@ Emblem::Expression<T, Alloc> sqrt(Emblem::Expression<T, Alloc>&&);
 
 
 template <class T, class Alloc>
+Emblem::Expression<T, Alloc> sin(const Emblem::Symbol<T, Alloc>& rA);
+template <class T, class Alloc>
+Emblem::Expression<T, Alloc> cos(const Emblem::Symbol<T, Alloc>& rA);
+template <class T, class Alloc>
+Emblem::Expression<T, Alloc> tan(const Emblem::Symbol<T, Alloc>& rA);
+template <class T, class Alloc>
+Emblem::Expression<T, Alloc> abs(const Emblem::Symbol<T, Alloc>& rA);
+template <class T, class Alloc>
+Emblem::Expression<T, Alloc> exp(const Emblem::Symbol<T, Alloc>& rA);
+template <class T, class Alloc>
+Emblem::Expression<T, Alloc> log(const Emblem::Symbol<T, Alloc>& rA);
+template <class T, class Alloc>
+Emblem::Expression<T, Alloc> log10(const Emblem::Symbol<T, Alloc>& rA);
+template <class T, class Alloc>
+Emblem::Expression<T, Alloc> sqrt(const Emblem::Symbol<T, Alloc>& rA);
+
+template <class T, class Alloc>
 Emblem::Expression<T, Alloc> operator+(
     const T& rA, const Emblem::Expression<T, Alloc>& rB);
 template <class T, class Alloc>
@@ -95,6 +112,19 @@ Emblem::Expression<T, Alloc> operator*(
 template <class T, class Alloc>
 Emblem::Expression<T, Alloc> operator/(
     const T& rA, Emblem::Expression<T, Alloc>&& rB);
+
+template <class T, class Alloc>
+Emblem::Expression<T, Alloc> operator+(
+    const T& rA, const Emblem::Symbol<T, Alloc>& rB);
+template <class T, class Alloc>
+Emblem::Expression<T, Alloc> operator-(
+    const T& rA, const Emblem::Symbol<T, Alloc>& rB);
+template <class T, class Alloc>
+Emblem::Expression<T, Alloc> operator*(
+    const T& rA, const Emblem::Symbol<T, Alloc>& rB);
+template <class T, class Alloc>
+Emblem::Expression<T, Alloc> operator/(
+    const T& rA, const Emblem::Symbol<T, Alloc>& rB);
 
 
 ///////////////////////////////////////////////////////////////////////
@@ -358,33 +388,49 @@ private:
 
     friend class Symbol;
 
-    friend Expression<T, Alloc> (::sin)(const Expression<T, Alloc>&);
-    friend Expression<T, Alloc> (::cos)(const Expression<T, Alloc>&);
-    friend Expression<T, Alloc> (::tan)(const Expression<T, Alloc>&);
-    friend Expression<T, Alloc> (::abs)(const Expression<T, Alloc>&);
-    friend Expression<T, Alloc> (::exp)(const Expression<T, Alloc>&);
-    friend Expression<T, Alloc> (::log)(const Expression<T, Alloc>&);
-    friend Expression<T, Alloc> (::log10)(const Expression<T, Alloc>&);
-    friend Expression<T, Alloc> (::sqrt)(const Expression<T, Alloc>&);
+    friend Emblem::Expression<T, Alloc> (::sin)(const Emblem::Expression<T, Alloc>&);
+    friend Emblem::Expression<T, Alloc> (::cos)(const Emblem::Expression<T, Alloc>&);
+    friend Emblem::Expression<T, Alloc> (::tan)(const Emblem::Expression<T, Alloc>&);
+    friend Emblem::Expression<T, Alloc> (::abs)(const Emblem::Expression<T, Alloc>&);
+    friend Emblem::Expression<T, Alloc> (::exp)(const Emblem::Expression<T, Alloc>&);
+    friend Emblem::Expression<T, Alloc> (::log)(const Emblem::Expression<T, Alloc>&);
+    friend Emblem::Expression<T, Alloc> (::log10)(const Emblem::Expression<T, Alloc>&);
+    friend Emblem::Expression<T, Alloc> (::sqrt)(const Emblem::Expression<T, Alloc>&);
 
-    friend Expression<T, Alloc> (::sin)(Expression<T, Alloc>&&);
-    friend Expression<T, Alloc> (::cos)(Expression<T, Alloc>&&);
-    friend Expression<T, Alloc> (::tan)(Expression<T, Alloc>&&);
-    friend Expression<T, Alloc> (::abs)(Expression<T, Alloc>&&);
-    friend Expression<T, Alloc> (::exp)(Expression<T, Alloc>&&);
-    friend Expression<T, Alloc> (::log)(Expression<T, Alloc>&&);
-    friend Expression<T, Alloc> (::log10)(Expression<T, Alloc>&&);
-    friend Expression<T, Alloc> (::sqrt)(Expression<T, Alloc>&&);
+    friend Emblem::Expression<T, Alloc> (::sin)(Emblem::Expression<T, Alloc>&&);
+    friend Emblem::Expression<T, Alloc> (::cos)(Emblem::Expression<T, Alloc>&&);
+    friend Emblem::Expression<T, Alloc> (::tan)(Emblem::Expression<T, Alloc>&&);
+    friend Emblem::Expression<T, Alloc> (::abs)(Emblem::Expression<T, Alloc>&&);
+    friend Emblem::Expression<T, Alloc> (::exp)(Emblem::Expression<T, Alloc>&&);
+    friend Emblem::Expression<T, Alloc> (::log)(Emblem::Expression<T, Alloc>&&);
+    friend Emblem::Expression<T, Alloc> (::log10)(Emblem::Expression<T, Alloc>&&);
+    friend Emblem::Expression<T, Alloc> (::sqrt)(Emblem::Expression<T, Alloc>&&);
 
-    friend Expression<T, Alloc> (::operator+)(const T& rA, const Expression<T, Alloc>& rB);
-    friend Expression<T, Alloc> (::operator-)(const T& rA, const Expression<T, Alloc>& rB);
-    friend Expression<T, Alloc> (::operator*)(const T& rA, const Expression<T, Alloc>& rB);
-    friend Expression<T, Alloc> (::operator/)(const T& rA, const Expression<T, Alloc>& rB);
-    friend Expression<T, Alloc> (::operator+)(const T& rA, Expression<T, Alloc>&& rB);
-    friend Expression<T, Alloc> (::operator-)(const T& rA, Expression<T, Alloc>&& rB);
-    friend Expression<T, Alloc> (::operator*)(const T& rA, Expression<T, Alloc>&& rB);
-    friend Expression<T, Alloc> (::operator/)(const T& rA, Expression<T, Alloc>&& rB);
+    friend Emblem::Expression<T, Alloc> (::sin)(const Emblem::Symbol<T, Alloc>&);
+    friend Emblem::Expression<T, Alloc> (::cos)(const Emblem::Symbol<T, Alloc>&);
+    friend Emblem::Expression<T, Alloc> (::tan)(const Emblem::Symbol<T, Alloc>&);
+    friend Emblem::Expression<T, Alloc> (::abs)(const Emblem::Symbol<T, Alloc>&);
+    friend Emblem::Expression<T, Alloc> (::exp)(const Emblem::Symbol<T, Alloc>&);
+    friend Emblem::Expression<T, Alloc> (::log)(const Emblem::Symbol<T, Alloc>&);
+    friend Emblem::Expression<T, Alloc> (::log10)(const Emblem::Symbol<T, Alloc>&);
+    friend Emblem::Expression<T, Alloc> (::sqrt)(const Emblem::Symbol<T, Alloc>&);
 
+    friend Emblem::Expression<T, Alloc> (::operator+)(const T& rA,
+            const Emblem::Expression<T, Alloc>& rB);
+    friend Emblem::Expression<T, Alloc> (::operator-)(const T& rA,
+            const Emblem::Expression<T, Alloc>& rB);
+    friend Emblem::Expression<T, Alloc> (::operator*)(const T& rA,
+            const Emblem::Expression<T, Alloc>& rB);
+    friend Emblem::Expression<T, Alloc> (::operator/)(const T& rA,
+            const Emblem::Expression<T, Alloc>& rB);
+    friend Emblem::Expression<T, Alloc> (::operator+)(const T& rA, Emblem::Expression<T, Alloc>&& rB);
+    friend Emblem::Expression<T, Alloc> (::operator-)(const T& rA, Emblem::Expression<T, Alloc>&& rB);
+    friend Emblem::Expression<T, Alloc> (::operator*)(const T& rA, Emblem::Expression<T, Alloc>&& rB);
+    friend Emblem::Expression<T, Alloc> (::operator/)(const T& rA, Emblem::Expression<T, Alloc>&& rB);
+    friend Emblem::Expression<T, Alloc>(::operator+)(const T& rA, const Emblem::Symbol<T, Alloc>& rB);
+    friend Emblem::Expression<T, Alloc>(::operator-)(const T& rA, const Emblem::Symbol<T, Alloc>& rB);
+    friend Emblem::Expression<T, Alloc>(::operator*)(const T& rA, const Emblem::Symbol<T, Alloc>& rB);
+    friend Emblem::Expression<T, Alloc>(::operator/)(const T& rA, const Emblem::Symbol<T, Alloc>& rB);
     ExpressionTree mExpressionTree;
 };
 

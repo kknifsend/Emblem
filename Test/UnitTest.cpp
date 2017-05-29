@@ -142,6 +142,43 @@ TEST(UnaryOperatorTest, Sqrt)
     ASSERT_NEAR(exprResult, actualResult, gDoubleTol);
 }
 
+TEST(UnaryOperatorTest, Identity)
+{
+    const Expression<double>::Symbol x("x");
+    const Expression<double>::ValueMap values = { { x, 5.0 } };
+    const Expression<double> expression = x;
+
+    const double exprResult = expression.evaluate(values);
+    const double actualResult = values.at(x);
+    ASSERT_NEAR(exprResult, actualResult, gDoubleTol);
+}
+
+TEST(UnaryOperatorTest, Negate)
+{
+    const Expression<double>::Symbol x("x");
+    const Expression<double>::ValueMap values = { { x, 5.0 } };
+    const Expression<double> expression = -x;
+
+    const double exprResult = expression.evaluate(values);
+    const double actualResult = -values.at(x);
+    ASSERT_NEAR(exprResult, actualResult, gDoubleTol);
+}
+
+TEST(UnaryOperatorTest, Complicated)
+{
+    const double valX = 4.0;
+    const double valY = 3.0;
+    const double valZ = 2.0;
+
+    const Expression<double>::Symbol x("x"), y("y"), z("z");
+    const Expression<double>::ValueMap values = { { x, valX }, { y, valY }, { z, valZ } };
+    const Expression<double> expression = sin(((x * y) + (z - x) / 5.0) + z);
+
+    const double exprResult = expression.evaluate(values);
+    const double actualResult = sin(((valX * valY) + (valZ - valX) / 5.0) + valZ);
+    ASSERT_NEAR(exprResult, actualResult, gDoubleTol);
+}
+
 
 int main(int argc, char** argv)
 {
