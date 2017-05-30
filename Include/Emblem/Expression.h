@@ -366,6 +366,9 @@ private:
         pOperationNode->mpLeftNode = rA.release();
         pOperationNode->mpRightNode = rB.release();
 
+        pOperationNode->mpLeftNode->mpParentNode = pOperationNode;
+        pOperationNode->mpRightNode->mpParentNode = pOperationNode;
+
         Expression result;
         result.mExpressionTree.insertToHead(pOperationNode);
         return result;
@@ -376,6 +379,7 @@ private:
     {
         UnaryOperatorNode* pOperationNode(new UnaryOperatorNode(rOperator));
         pOperationNode->mpLeftNode = rA.release();
+        pOperationNode->mpLeftNode->mpParentNode = pOperationNode;
 
         Expression result;
         result.mExpressionTree.insertToHead(pOperationNode);
