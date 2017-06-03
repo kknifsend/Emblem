@@ -114,6 +114,11 @@ public:
         return new BinaryOperatorNode(*this);
     }
 
+    const BinaryOperator<T>& GetOperator() const
+    {
+        return mBinaryOperator;
+    }
+
     virtual bool isOperator() const { return true; }
 private:
     BinaryOperator<T> mBinaryOperator;
@@ -150,6 +155,11 @@ public:
     virtual TermNode* clone() override
     {
         return new UnaryOperatorNode(*this);
+    }
+
+    const UnaryOperator<T>& GetOperator() const
+    {
+        return mUnaryOperator;
     }
 
     virtual bool isOperator() const { return true; }

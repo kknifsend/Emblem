@@ -203,7 +203,7 @@ public:
     void simplify();
 
     /** */
-    Expression derivative(const Symbol&) const {}
+    Expression derivative(const Symbol&) const;
 
     // Operators
     ///////////////////////////////////////////////////
@@ -509,6 +509,14 @@ void Expression<T, Alloc>::Substitute(
             nodeStack.push(pCurNode->mpRightNode);
         }
     }
+}
+
+///////////////////////////////////////////////////////////////////////
+
+template <class T, class Alloc>
+Expression<T, Alloc> Expression<T, Alloc>::derivative(const Symbol&) const
+{
+
 }
 
 ///////////////////////////////////////////////////////////////////////

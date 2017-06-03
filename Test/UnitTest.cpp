@@ -193,7 +193,6 @@ TEST(GeneralTest, Substitution)
     const double exprResult = expression.evaluate(values);
     const double actualResult = (1.0 + valX) * (1.0 + valX) + 10.0;
     ASSERT_NEAR(exprResult, actualResult, gDoubleTol);
-
 }
 
 

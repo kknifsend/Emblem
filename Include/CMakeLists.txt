@@ -11,6 +11,7 @@ set(INTERNAL_HEADERS
     ${ProjectName}/Internal/UnaryOperators.h
     ${ProjectName}/Internal/BinaryOperators.h
     ${ProjectName}/Internal/BinaryTree.h
+    ${ProjectName}/Internal/Derivative.h
 )
 
 add_library(${ProjectName}
