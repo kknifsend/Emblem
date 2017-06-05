@@ -57,6 +57,7 @@ public:
     static BinaryOperator Subtraction;
     static BinaryOperator Multiplication;
     static BinaryOperator Division;
+    static BinaryOperator Pow;
 
 private:
     const Operator mOperator;
@@ -77,6 +78,9 @@ T FuncMul(const T& rA, const T& rB) { return (rA * rB); }
 template <class T>
 T FuncDiv(const T& rA, const T& rB) { return (rA / rB); }
 
+template <class T>
+T FuncPow(const T& rA, const T& rB) { return pow(rA, rB); }
+
 ///////////////////////////////////////////////////////////////////////
 
 template <class T>
@@ -90,6 +94,9 @@ BinaryOperator<T> BinaryOperator<T>::Multiplication(FuncMul<T>, " * ");
 
 template <class T>
 BinaryOperator<T> BinaryOperator<T>::Division(FuncDiv<T>, " / ");
+
+template <class T>
+BinaryOperator<T> BinaryOperator<T>::Pow(FuncPow<T>, " ^ ");
 
 } // namespace Internal
 } // namespace Emblem

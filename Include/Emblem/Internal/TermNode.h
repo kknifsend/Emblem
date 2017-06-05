@@ -109,7 +109,7 @@ public:
         }
     }
 
-    virtual TermNode* clone() override
+    virtual TermNode* clone() const override
     {
         return new BinaryOperatorNode(*this);
     }
@@ -152,7 +152,7 @@ public:
         rOut << mUnaryOperator.GetCloseString();
     }
 
-    virtual TermNode* clone() override
+    virtual TermNode* clone() const override
     {
         return new UnaryOperatorNode(*this);
     }
@@ -188,7 +188,7 @@ public:
         rOut << mSymbol;
     }
 
-    virtual TermNode* clone() override
+    virtual TermNode* clone() const override
     {
         return new SymbolNode(*this);
     }
@@ -230,7 +230,7 @@ public:
         rOut << *mpData;
     }
 
-    virtual TermNode* clone() override
+    virtual TermNode* clone() const override
     {
         return new ConstantNode(*this);
     }

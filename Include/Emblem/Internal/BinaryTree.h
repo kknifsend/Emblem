@@ -52,21 +52,31 @@ public:
                && (mpRightNode == nullptr);
     }
 
-    virtual NodeType* clone() = 0;
+    void setLeft(NodeType* pNode)
+    {
+        pNode->mpParentNode = (NodeType*)this;
+        mpLeftNode = pNode;
+    }
 
-    NodeType* cloneTree()
+    void setRight(NodeType* pNode)
+    {
+        pNode->mpParentNode = (NodeType*)this;
+        mpRightNode = pNode;
+    }
+
+    virtual NodeType* clone() const = 0;
+
+    NodeType* cloneTree() const
     {
         NodeType* pClone = clone();
         if (mpLeftNode != nullptr)
         {
-            pClone->mpLeftNode = mpLeftNode->cloneTree();
-            pClone->mpLeftNode->mpParentNode = pClone;
+            pClone->setLeft(mpLeftNode->cloneTree());
         }
 
         if (mpRightNode != nullptr)
         {
-            pClone->mpRightNode = mpRightNode->cloneTree();
-            pClone->mpRightNode->mpParentNode = pClone;
+            pClone->setRight(mpRightNode->cloneTree());
         }
 
         return pClone;

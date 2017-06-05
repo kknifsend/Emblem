@@ -33,13 +33,15 @@ template <class T, class Alloc>
 using ExpressionTree = BinaryTree<TermNode<T, Alloc>>;
 
 template <class T, class Alloc>
-TermNode<T, Alloc>* OperatorDerivative(const BinaryOperatorNode<T, Alloc>* pBinaryOp);
+TermNode<T, Alloc>* OperatorDerivative(
+    const BinaryOperatorNode<T, Alloc>* pBinaryOp, const Symbol<T, Alloc>& rSymbol);
 template <class T, class Alloc>
-TermNode<T, Alloc>* OperatorDerivative(const UnaryOperatorNode<T, Alloc>* pUnaryOp);
+TermNode<T, Alloc>* OperatorDerivative(
+    const UnaryOperatorNode<T, Alloc>* pUnaryOp, const Symbol<T, Alloc>& rSymbol);
 
 template <class T, class Alloc>
 TermNode<T, Alloc>* Derivative(const TermNode<T, Alloc>* pNode, const Symbol<T, Alloc>& rSymbol)
-{   
+{
     typedef ConstantNode<T, Alloc> ConstantNode;
     typedef SymbolNode<T, Alloc> SymbolNode;
     typedef BinaryOperatorNode<T, Alloc> BinaryOperatorNode;
@@ -47,20 +49,19 @@ TermNode<T, Alloc>* Derivative(const TermNode<T, Alloc>* pNode, const Symbol<T, 
 
     if (pNode->isOperator())
     {
-        const BinaryOperatorNode* pBinaryOp = 
+        const BinaryOperatorNode* pBinaryOp =
             dynamic_cast<const BinaryOperatorNode*>(pNode);
         if (pBinaryOp != nullptr)
         {
-            DerivativeBinaryOp(pBinaryOp->GetOperator());
+            return OperatorDerivative(pBinaryOp, rSymbol);
         }
         else
         {
             const UnaryOperatorNode* pUnaryOp =
                 dynamic_cast<const UnaryOperatorNode*>(pNode);
             assert(pUnaryOp != nullptr);
-            OperatorDerivative(pUnaryOp->GetOperator());
+            return OperatorDerivative(pUnaryOp, rSymbol);
         }
-
     }
     else
     {
@@ -87,15 +88,70 @@ TermNode<T, Alloc>* Derivative(const TermNode<T, Alloc>* pNode, const Symbol<T, 
 }
 
 template <class T, class Alloc>
-TermNode<T, Alloc>* OperatorDerivative(const BinaryOperatorNode<T, Alloc>* pBinaryOp)
+TermNode<T, Alloc>* OperatorDerivative(
+    const BinaryOperatorNode<T, Alloc>* pBinaryOp, const Symbol<T, Alloc>& rSymbol)
 {
+    typedef TermNode<T, Alloc> TermNode;
+    typedef BinaryOperator<T> BinaryOperator;
+    typedef BinaryOperatorNode<T, Alloc> BinaryOperatorNode;
+    typedef ConstantNode<T, Alloc> ConstantNode;
 
+    TermNode* pDerivative = nullptr;
+    const auto& rOperator = pBinaryOp->GetOperator();
+    if ((rOperator == BinaryOperator::Addition) ||
+            (rOperator == BinaryOperator::Subtraction))
+    {
+        pDerivative = pBinaryOp->clone();
+        pDerivative->setLeft(Derivative(pBinaryOp->mpLeftNode, rSymbol));
+        pDerivative->setRight(Derivative(pBinaryOp->mpRightNode, rSymbol));
+    }
+    else if (rOperator == BinaryOperator::Multiplication)
+    {
+        pDerivative = new BinaryOperatorNode(BinaryOperator::Addition);
+
+        TermNode* pLeftTerm = new BinaryOperatorNode(BinaryOperator::Multiplication);
+        TermNode* pRightTerm = new BinaryOperatorNode(BinaryOperator::Multiplication);
+        pDerivative->setLeft(pLeftTerm);
+        pDerivative->setRight(pRightTerm);
+
+        pLeftTerm->setLeft(Derivative(pBinaryOp->mpLeftNode, rSymbol));
+        pLeftTerm->setRight(pBinaryOp->mpRightNode->clone());
+
+        pRightTerm->setLeft(pBinaryOp->mpLeftNode->clone());
+        pRightTerm->setRight(Derivative(pBinaryOp->mpRightNode, rSymbol));
+    }
+    else if (rOperator == BinaryOperator::Division)
+    {
+        pDerivative = new BinaryOperatorNode(BinaryOperator::Division);
+
+        TermNode* pTopTerm = new BinaryOperatorNode(BinaryOperator::Subtraction);
+        TermNode* pBottomTerm = new BinaryOperatorNode(BinaryOperator::Pow);
+        pDerivative->setLeft(pTopTerm);
+        pDerivative->setRight(pBottomTerm);
+
+        TermNode* pLeftTerm = new BinaryOperatorNode(BinaryOperator::Multiplication);
+        TermNode* pRightTerm = new BinaryOperatorNode(BinaryOperator::Multiplication);
+        pTopTerm->setLeft(pLeftTerm);
+        pTopTerm->setRight(pRightTerm);
+
+        pLeftTerm->setLeft(Derivative(pBinaryOp->mpLeftNode, rSymbol));
+        pLeftTerm->setRight(pBinaryOp->mpRightNode->clone());
+
+        pRightTerm->setLeft(pBinaryOp->mpLeftNode->clone());
+        pRightTerm->setRight(Derivative(pBinaryOp->mpRightNode, rSymbol));
+
+        pBottomTerm->setLeft(pBinaryOp->mpRightNode->clone());
+        pBottomTerm->setRight(new ConstantNode(2.0));
+    }
+
+    return pDerivative;
 }
 
 template <class T, class Alloc>
-TermNode<T, Alloc>* OperatorDerivative(const UnaryOperatorNode<T, Alloc>* pUnaryOp)
+TermNode<T, Alloc>* OperatorDerivative(
+    const UnaryOperatorNode<T, Alloc>* pUnaryOp, const Symbol<T, Alloc>& rSymbol)
 {
-
+    return nullptr;
 }
 
 

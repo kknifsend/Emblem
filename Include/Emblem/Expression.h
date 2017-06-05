@@ -514,14 +514,6 @@ void Expression<T, Alloc>::Substitute(
 ///////////////////////////////////////////////////////////////////////
 
 template <class T, class Alloc>
-Expression<T, Alloc> Expression<T, Alloc>::derivative(const Symbol&) const
-{
-
-}
-
-///////////////////////////////////////////////////////////////////////
-
-template <class T, class Alloc>
 void Expression<T, Alloc>::Output(std::ostream& rOut) const
 {
     const TermNode* pHead = mExpressionTree.head();
@@ -825,7 +817,22 @@ std::ostream& operator<<(
     return rOut;
 }
 
+#include "Internal\Derivative.h"
+#include "Emblem/Symbol.h"
 
+///////////////////////////////////////////////////////////////////////
+
+template <class T, class Alloc>
+Emblem::Expression<T, Alloc> Emblem::Expression<T, Alloc>::derivative(
+    const Symbol& rSymbol) const
+{
+    const TermNode* pHead = mExpressionTree.head();
+
+    TermNode* pDerivative = Internal::Derivative(pHead, rSymbol);
+    Expression derivative;
+    derivative.mExpressionTree.insertToHead(pDerivative);
+    return derivative;
+}
 /** \mainpage Emblem
 *
 * \section Introduction
@@ -836,4 +843,3 @@ std::ostream& operator<<(
 * using a 3rd party matrix class, or array to provide vector
 * function functionality.
 */
-#include "Emblem/Symbol.h"

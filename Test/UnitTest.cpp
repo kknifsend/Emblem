@@ -196,6 +196,18 @@ TEST(GeneralTest, Substitution)
 }
 
 
+TEST(GeneralTest, Derivative)
+{
+    const Expression<double>::Symbol x("x"), y("y");
+    const Expression<double> expression = x * y;
+    const Expression<double> derivative = expression.derivative(x);
+
+    std::cout << "Expression: " << expression << '\n';
+    std::cout << "Derivative: " << derivative << '\n';
+
+    int a = 0;
+}
+
 int main(int argc, char** argv)
 {
     ::testing::InitGoogleTest(&argc, argv);
